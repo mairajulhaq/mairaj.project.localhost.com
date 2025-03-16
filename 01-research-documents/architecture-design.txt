@@ -1,0 +1,81 @@
+
+========= Start - Architecture Design - Start ========
+
+Presentation Layer
+
+- Client Side Presentation Layer
+-- (UMI.js + Ant Design Pro)
+---- Routing (Protected routes configured in `umi.config.ts`)
+---- Pages/UI components
+
+- Server Side Presentation Layer
+-- Laravel Web Routes
+-- Laravel Blade Views
+--- Home View
+--- UMIjs VIew  
+
+Business Layer / application layer
+- Laravel APIs Routes
+- Laravel Middleware & Sanctum Authentication 
+- Laravel APIs Resource Controllers (API Processing by following Laravel API Route Resource Controller Structure)
+
+Data Layer 
+- MySQL Database 
+-- Laravel Eloquent ORM
+--- Laravel Models
+
+
+=========== End - Architecture Design   ==================
+
+write 'Architecture Design' according virtual university of pakistan for my final year project
+which i have created by using following stack.
+
+FrontEnd:
+I have utilized 'https://pro.ant.design/' which ready to use admin templates and it is pre configured UMIjs + ant Design pro-components
+so that means all protected routes which will be accessable to the loggedin user, teacher, admin are managed in the UMIjs config and
+each protected route is rendering the associated UI compoenent and fetch or process data by using backend MVC framework laravel APIs.
+
+Backend:
+I have created APIs to manage the following DB tables data in my aaplication and each API route is configured
+ by laravel recommeded API route controller structureed controller to inser, update, delete, get, get all routes etc.
+ and i have also configured just two views one is frontpage/home-page view which is laravel blade HTML content view.
+ the second view is UMIjs view which is rendering for the other all routes expect the main/home/domain page route and 
+ it is rendering the UMIjs route associated UI compoenent.
+Note: I have utilized 'laravel/sanctum' for API authentication. 
+
+Tables:
+users
+addresses
+qualifications
+experiences
+categories
+classes
+quizzes
+questions
+attempts
+fee_vouchers
+
+Database:
+I have utilized the 'Mysql' database and database have the following tables.
+users
+password_reset_tokens
+sessions
+cache
+cache_locks
+jobs
+job_batches
+failed_jobs
+categories
+category_tutors
+category_users
+classes
+class_users
+fee_vouchers
+quizzes
+addresses
+questions
+qualifications
+experiences
+attempts
+quiz_users
+personal_access_tokens

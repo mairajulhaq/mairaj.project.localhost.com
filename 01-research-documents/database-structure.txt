@@ -1,0 +1,141 @@
+
+Database
+
+-----------------
+Table: users
+- Columns: 
+-- id
+-- first_name
+-- last_name
+-- name
+-- role
+-- email
+-- email_verified_at
+-- password
+-- remember_token
+-- image_url
+-- created_at
+-- updated_at
+
+---------------------
+
+Table: categories
+- Columns: 
+-- id
+-- title
+-- description
+-- image_url
+-- author_id
+-- created_at
+-- updated_at
+
+------------------------------
+
+Table: category_users
+- Columns: 
+-- id
+-- category_id
+-- user_id
+-- created_at
+-- updated_at
+
+-------------------------------
+
+Table: fee_vouchers
+- Columns: 
+-- id
+-- title
+-- description
+-- user_id
+-- status
+-- payment_proof_image_url
+-- author_id
+-- created_at
+-- updated_at
+
+-------------------------------
+
+Table: classes
+- Columns: 
+-- id
+-- title
+-- description
+-- user_id
+-- status
+-- payment_proof_image_url
+-- author_id
+-- created_at
+-- updated_at
+
+-------------------------
+
+Table: class_category
+- Columns: 
+-- id
+-- class_id
+-- category_id
+-- created_at
+-- updated_at
+
+---------------------------
+
+Table: class_user
+- Columns: 
+-- id
+-- class_id
+-- user_id
+-- created_at
+-- updated_at
+
+------------------------
+
+Table: quizzes
+- Columns: 
+-- id
+-- title
+-- description
+-- author_id
+-- created_at
+-- updated_at
+
+-------------------------------
+
+Table: quiz_class
+- Columns: 
+-- id
+-- quiz_id
+-- class_id
+-- created_at
+-- updated_at
+
+----------------------------------
+
+Table: quiz_attempts
+- Columns: 
+-- id
+-- quiz_id
+-- class_id
+-- user_id
+-- created_at
+-- updated_at
+
+--------------------------------
+
+Table: questions
+- Columns: 
+-- id
+-- question
+-- choices
+-- answer
+-- author_id
+-- created_at
+-- updated_at
+
+---------------------------
+Table: quiz_question
+- Columns: 
+-- id
+-- quiz_id
+-- question_id
+-- created_at
+-- updated_at
