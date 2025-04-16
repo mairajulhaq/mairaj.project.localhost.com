@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QualificationController;
 use App\Http\Controllers\ExperienceController;
+use App\Http\Controllers\CategoryController;
 
 use App\Http\Controllers\FileManagerController;
 
@@ -41,6 +42,11 @@ Route::middleware('auth:sanctum')->group(function () {
      * Experiences Module
      */
     Route::resource('experiences', ExperienceController::class);
+
+    /**
+     * Category Module
+     */
+    Route::resource('categories', CategoryController::class);
 
 });
 
