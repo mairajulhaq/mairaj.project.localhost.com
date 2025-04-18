@@ -97,6 +97,15 @@ const RoutesAdminiApp = [
     icon: 'SolutionOutlined',
     access: 'isAdministrator',
     layout: 'mix',
+    component: './admin-app/classes-management/list-classes',
+  },
+  {
+    path: '/admin-app/classes/new',
+    hideInMenu: true,
+    name: 'Create Class',
+    access: 'isAdministrator',
+    layout: 'mix',
+    component: './admin-app/classes-management/create-class',
   },
   {
     path: '/admin-app/quizzes',

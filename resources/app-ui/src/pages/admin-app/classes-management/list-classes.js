@@ -1,12 +1,11 @@
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Avatar, message } from 'antd';
+import { Button, message, Tag } from 'antd';
 import { request, history } from '@umijs/max';
 import moment from 'moment';
 import { useModel } from 'umi';
 import { useRef } from "react";
-
-import DeleteUser from './delete-user';
+import DeleteClass from './delete-class';
 
 export const waitTimePromise = async (time = 100) => {
     return new Promise((resolve) => {
@@ -20,7 +19,7 @@ export const waitTime = async (time = 100) => {
     await waitTimePromise(time);
 };
 
-const ListUsers = () => {
+const ListClasses = () => {
 
     const {initialState, loading, refresh, setInitialState} = useModel('@@initialState');
 
@@ -30,7 +29,7 @@ const ListUsers = () => {
     console.log('loading');
     console.log(loading);
 
-    const usersTableRef = useRef();
+    const classesTableRef = useRef();
 
     const columns = [
 
@@ -43,33 +42,28 @@ const ListUsers = () => {
             defaultSortOrder: 'descend',
         },
         {
-            title: "Name",
-            key: 'table-column-name',
-            copyable: true,
-            hideInSearch: true,
-            render: (dom, record) => {
-
-                return (
-                    <div>
-
-                        <Avatar size={"large"}
-                        src={(null !== record?.image_url ? record?.image_url : DEFAULT_USER_PROFILE_IMAGE_URL)}/>
-                        <span style={{margin: "0px 0px 0px 10px"}}>
-
-                            {record?.name}
-
-                        </span>
-
-                    </div>
-                );
-            },
-        },
-        {
-            title: "Email",
-            dataIndex: 'email',
-            key: 'table-column-email',
-            hideInSearch: true,
-        },
+			title: 'Title',
+			dataIndex: 'title',
+			key: 'table-column-title',
+			hideInSearch: true,
+		},
+		{
+			title: 'Description',
+			dataIndex: 'description',
+			key: 'table-column-description',
+			hideInSearch: true,
+		},
+		{
+			title: 'Status',
+			dataIndex: 'status',
+			key: 'table-column-status',
+			hideInSearch: true,
+			render: ( text ) => (
+				<Tag color={ text === 'active' ? 'green' : 'red' }>
+					{ text === 'active' ? 'Active' : 'In-Active' }
+				</Tag>
+			),
+		},
         {
             title: "Created Date",
             dataIndex: 'created_at',
@@ -101,32 +95,32 @@ const ListUsers = () => {
                 <Button
                     key="editable"
                     onClick={() => {
-                        history.push('/admin-app/users/edit/' + record.id);
+                        history.push('/admin-app/classes/edit/' + record.id);
                     }}
                 >
                     <EditOutlined />
                 </Button>,
 
-                <DeleteUser
+                <DeleteClass
                     rowId={ record?.id }
                     onFinish={ ( { status, text_message } ) => {
                         if ( status ) {
                             message.success( text_message );
-                            usersTableRef.current?.reload();
+                            classesTableRef.current?.reload();
                         } else {
                             message.error( text_message );
                         }
                     } }
-                />,
+                />
 
             ],
         },
     ];
-  
+
     return (
         <PageContainer>
             <ProTable
-                actionRef={usersTableRef}
+                actionRef={classesTableRef}
                 rowKey="id"
                 search={false}
                 pagination={{
@@ -139,7 +133,7 @@ const ListUsers = () => {
                         type="primary"
                         key="new"
                         onClick={() => {
-                            history.push('/admin-app/users/new');
+                            history.push('/admin-app/classes/new');
                         }}
                     >
                         <PlusOutlined/> New
@@ -154,12 +148,11 @@ const ListUsers = () => {
                          */
                         await waitTime(2000);
 
-                        return await request('/api/users', {
+                        return await request('/api/classes', {
 
                             params: {
                                 sort: {...sort},
                                 pagination: {...params},
-                                role: 'user',
                             },
 
                         }).then(async (api_response) => {
@@ -178,4 +171,4 @@ const ListUsers = () => {
     );
 };
 
-export default ListUsers;
+export default ListClasses;

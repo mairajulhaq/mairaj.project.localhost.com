@@ -2,15 +2,15 @@ import { Button, Popconfirm } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { request } from '@umijs/max';
 
-const DeleteUser = ( { rowId, onFinish } ) => {
+const DeleteClass = ( { rowId, onFinish } ) => {
 	return (
 		<Popconfirm
-			title="Delete the User"
-			description="Are you sure you want to delete this user?"
+			title="Delete the Class"
+			description="Are you sure you want to delete this Class?"
 			icon={ <QuestionCircleOutlined style={ { color: 'red' } } /> }
 			placement="left"
 			onConfirm={ async () => {
-				return await request('/api/users/' + rowId, {
+				return await request('/api/classes/' + rowId, {
 
 					method: 'DELETE',
 
@@ -19,13 +19,13 @@ const DeleteUser = ( { rowId, onFinish } ) => {
 					if ( response.status === true ) {
 						onFinish( {
 							status: true,
-							text_message: 'User deleted successfully',
+							text_message: 'Class deleted successfully',
 						} );
 					} else {
 						onFinish( {
 							status: false,
 							text_message:
-								'Failed to delete User: Invalid response',
+								'Failed to delete Class: Invalid response',
 						} );
 					}
 				} );
@@ -39,4 +39,4 @@ const DeleteUser = ( { rowId, onFinish } ) => {
 		</Popconfirm>
 	);
 };
-export default DeleteUser;
+export default DeleteClass;

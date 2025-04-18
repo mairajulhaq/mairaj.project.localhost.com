@@ -378,6 +378,9 @@ const UpdateCategory = () => {
                                     <ProFormTextArea
                                         name={'description'}
                                         label="Description"
+                                        fieldProps={ {
+                                            rows: 6,
+                                        } }
                                         placeholder="Share a little description to fill out your category."
                                         colProps={{xs: 24, sm: 24, md: 24, lg: 24, xl: 24}}
                                     />
