@@ -1,12 +1,15 @@
 import {EditOutlined, PlusOutlined} from '@ant-design/icons';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Avatar, message } from 'antd';
-import { request, history } from '@umijs/max';
+import {
+  PageContainer,
+  ProTable
+} from '@ant-design/pro-components';
+import {Button, Avatar, message} from 'antd';
+import {request,history} from '@umijs/max';
 import moment from 'moment';
-import { useModel } from 'umi';
-import { useRef } from "react";
+import {useModel} from 'umi';
+import {useRef, useState} from "react";
 
-import DeleteTutor from './delete-tutor';
+import DeleteUser from './delete-user';
 
 export const waitTimePromise = async (time = 100) => {
     return new Promise((resolve) => {
@@ -20,7 +23,7 @@ export const waitTime = async (time = 100) => {
     await waitTimePromise(time);
 };
 
-const ListTutors = () => {
+const ListUsers = () => {
 
     const {initialState, loading, refresh, setInitialState} = useModel('@@initialState');
 
@@ -30,7 +33,7 @@ const ListTutors = () => {
     console.log('loading');
     console.log(loading);
 
-    const tutorsTableRef = useRef();
+    const usersTableRef = useRef();
 
     const columns = [
 
@@ -71,17 +74,6 @@ const ListTutors = () => {
             hideInSearch: true,
         },
         {
-            title: "Qualification",
-            dataIndex: 'qualifications',
-            key: 'table-column-qualification',
-            hideInSearch: true,
-            render: (text, record, _, action) => [
-
-                record?.qualifications?.length > 0 ? record.qualifications.map((q) => q.degree).join(", ") : "No qualifications available"
-
-            ],
-        },
-        {
             title: "Created Date",
             dataIndex: 'created_at',
             key: 'table-column-created-date',
@@ -112,18 +104,18 @@ const ListTutors = () => {
                 <Button
                     key="editable"
                     onClick={() => {
-                        history.push('/admin-app/tutors/edit/' + record.id);
+                        history.push('/admin-app/users/edit/' + record.id);
                     }}
                 >
                     <EditOutlined />
                 </Button>,
 
-                <DeleteTutor
+                <DeleteUser
                     rowId={ record?.id }
                     onFinish={ ( { status, text_message } ) => {
                         if ( status ) {
                             message.success( text_message );
-                            tutorsTableRef.current?.reload();
+                            usersTableRef.current?.reload();
                         } else {
                             message.error( text_message );
                         }
@@ -133,32 +125,42 @@ const ListTutors = () => {
             ],
         },
     ];
-
+  
     return (
         <PageContainer>
             <ProTable
-                actionRef={tutorsTableRef}
+                actionRef={usersTableRef}
                 rowKey="id"
                 search={false}
                 pagination={{
                     defaultPageSize: 10,
                     showSizeChanger: true,
                     pageSizeOptions: [10, 20, 50, 100],
+                    onChange: (page) => console.log(page),
                 }}
                 toolBarRender={() => [
                     <Button
                         type="primary"
                         key="new"
                         onClick={() => {
-                            history.push('/admin-app/tutors/new');
+                            history.push('/admin-app/users/new');
                         }}
                     >
                         <PlusOutlined/> New
-                    </Button>
+                    </Button>,
                 ]}
                 request={
 
                         async (params, sort, filter) => {    
+
+                        console.log('params');
+                        console.log(params);
+
+                        console.log('params - sort');
+                        console.log(sort);
+
+                        console.log('params - filter');
+                        console.log(filter);
 
                         /**
                          * Delay the API request
@@ -170,10 +172,18 @@ const ListTutors = () => {
                             params: {
                                 sort: {...sort},
                                 pagination: {...params},
-                                role: 'tutor',
+                                role: 'user',
                             },
 
                         }).then(async (api_response) => {
+                            console.log('api_response');
+                            console.log(api_response);
+
+                            console.log('api_response.data');
+                            console.log(api_response.data);
+
+                            console.log('api_response.data.data');
+                            console.log(api_response.data.data);
 
                             return { data: api_response.data.data, total: api_response.data.total, current_page: api_response.data.current_page};
 
@@ -189,4 +199,4 @@ const ListTutors = () => {
     );
 };
 
-export default ListTutors;
+export default ListUsers;

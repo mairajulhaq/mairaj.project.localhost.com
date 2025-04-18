@@ -8,13 +8,12 @@ import {
     ProFormDatePicker,
     StepsForm
 } from '@ant-design/pro-components';
-import { Row, Col, message, Button, Form, Image, Upload, Steps } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import React, { useRef, useState } from "react";
-import { request, history } from '@umijs/max';
+import {Row, Col, message, Button, Form, Image, Upload, Steps, Alert} from 'antd';
+import {UploadOutlined} from '@ant-design/icons';
+import React, {useRef, useState} from "react";
+import {request, history} from '@umijs/max';
+
 import moment from 'moment';
-import ListQualifications from './qualifications/list-qualifications';
-import ListExperiences from './experiences/list-experiences';
 
 import { getFile, getBase64 } from '@/components/Helpers/ImageConversion';
 
@@ -27,34 +26,29 @@ const waitTime = (time = 100) => {
     });
 };
 
-
 /**
  * Form Submission handler and API Request Performer
  */
-const onFinishHandlerStepsForm = async (values, tutorID) => {
+const onFinishHandlerStepsForm = async (values, userID) => {
     console.log('onFinishHandlerStepsForm');
     console.log('Received values of form: ', values);
 
     message.success('Submitted successfully');
-    history.push('/admin-app/tutors/edit/' + tutorID);
+    history.push('/admin-app/users/edit/' + userID);
     
 };
 
-
-const CreateTutor = () => {
+const CreateUser = () => {
 
     /**
      * States of Component
      */
 
     const [form] = Form.useForm();
-    const qualificationsTableRef = useRef();
-    const experiencesTableRef = useRef();
 
     const [imageUrl, setImageUrl] = useState(DEFAULT_USER_PROFILE_IMAGE_URL);
-    const [tutorID, setTutorID] = useState({});
-
-    /**
+    
+       /**
      * The Component Output
      */
 
@@ -63,7 +57,7 @@ const CreateTutor = () => {
             <StepsForm
                 onFinish={async (values) => {
                     await waitTime(1000);
-                    return await onFinishHandlerStepsForm(values, tutorID);
+                    return await onFinishHandlerStepsForm(values, userID);
                 }}
                 formProps={{
                     validateMessages: {
@@ -81,7 +75,7 @@ const CreateTutor = () => {
                         <Steps current={dom?.props?.children?.props?.current}>
                             {[
                             {key: "personal_details", title: "Personal Details"},
-                            {key: "qualification_and_experience_details", title: "Qualification & Experience Details"}
+                            {key: "qualification_and_experience_details", title: "Dummy Data"}
                             ].map((item) => (
                             <Steps.Step key={item.key} title={item.title}/>
                             ))}
@@ -101,7 +95,7 @@ const CreateTutor = () => {
                             image_url: imageUrl,
                             name: values?.name,
                             email: values?.email,
-                            role: 'tutor',
+                            role: 'user',
                             mobile_no: values?.mobile_no,
                             date_of_birth: moment(new Date(values?.date_of_birth)).format('YYYY-MM-DD'),
                             bio_data: values?.bio_data,
@@ -333,6 +327,7 @@ const CreateTutor = () => {
                         </Row>
                     </ProCard>
                 </StepsForm.StepForm>
+                
                 <StepsForm.StepForm
                     name="qualification_and_experience_details"
                     title="Qualification & Experience Details"
@@ -346,22 +341,13 @@ const CreateTutor = () => {
                     //   form={form}
                 >
                 
-                    <ListQualifications
-                        qualificationsTableRef={ qualificationsTableRef }
-                        tutorID={ tutorID }
-                    />,
-
-                    <ListExperiences
-                        experiencesTableRef={ experiencesTableRef }
-                        tutorID={ tutorID }
-                    />       
-                    
+                <Alert message=" testing message 123" type="success" />;
+                            
                 </StepsForm.StepForm>
             </StepsForm>
 
         </PageContainer>
     );
-
 };
 
-export default CreateTutor;
+export default CreateUser;

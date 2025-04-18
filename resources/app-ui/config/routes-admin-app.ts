@@ -36,6 +36,14 @@ const RoutesAdminiApp = [
     component: './admin-app/categories-management/create-category',
   },
   {
+    path: '/admin-app/categories/edit/:id',
+    hideInMenu: true,
+    name: 'Edit Category',
+    access: 'isAdministrator',
+    layout: 'mix',
+    component: './admin-app/categories-management/update-category',
+  },
+  {
     path: '/admin-app/tutors',
     name: 'Tutors Management',
     icon: 'UsergroupAddOutlined',
@@ -65,6 +73,23 @@ const RoutesAdminiApp = [
     icon: 'TeamOutlined',
     access: 'isAdministrator',
     layout: 'mix',
+    component: './admin-app/users-management/list-users',
+  },
+  {
+    path: '/admin-app/users/new',
+    hideInMenu: true,
+    name: 'Create User',
+    access: 'isAdministrator',
+    layout: 'mix',
+    component: './admin-app/users-management/create-user',
+  },
+  {
+    path: '/admin-app/users/edit/:id',
+    hideInMenu: true,
+    name: 'Edit User',
+    access: 'isAdministrator',
+    layout: 'mix',
+    component: './admin-app/users-management/update-user',
   },
   {
     path: '/admin-app/classes',

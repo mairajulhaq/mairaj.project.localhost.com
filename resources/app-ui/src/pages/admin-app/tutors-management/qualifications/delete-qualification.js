@@ -1,16 +1,16 @@
 import { Button, Popconfirm } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined } from '@ant-design/icons';
-import { request } from '@umijs/max';
+import {request} from '@umijs/max';
 
-const DeleteCategory = ( { rowId, onFinish } ) => {
+const DeleteQualification = ( { rowId, onFinish } ) => {
 	return (
 		<Popconfirm
-			title="Delete the Category"
-			description="Are you sure you want to delete this Category?"
+			title="Delete the Qualification"
+			description="Are you sure you want to delete this Qualification?"
 			icon={ <QuestionCircleOutlined style={ { color: 'red' } } /> }
 			placement="left"
 			onConfirm={ async () => {
-				return await request('/api/categories/' + rowId, {
+				return await request('/api/qualifications/' + rowId, {
 
 					method: 'DELETE',
 
@@ -19,13 +19,13 @@ const DeleteCategory = ( { rowId, onFinish } ) => {
 					if ( response.status === true ) {
 						onFinish( {
 							status: true,
-							text_message: 'Category deleted successfully',
+							text_message: 'Qualification deleted successfully',
 						} );
 					} else {
 						onFinish( {
 							status: false,
 							text_message:
-								'Failed to delete Category: Invalid response',
+								'Failed to delete Qualification: Invalid response',
 						} );
 					}
 				} );
@@ -39,4 +39,4 @@ const DeleteCategory = ( { rowId, onFinish } ) => {
 		</Popconfirm>
 	);
 };
-export default DeleteCategory;
+export default DeleteQualification;

@@ -8,13 +8,13 @@ import {
     ProFormList,
     ProFormSelect
 } from '@ant-design/pro-components';
-import {Row, Col, message, Button, Form, Image, Upload} from 'antd';
-import {UploadOutlined} from '@ant-design/icons';
-import React, {useEffect, useState} from "react";
-import {request, history} from '@umijs/max';
+import { Row, Col, message, Button, Form, Image, Upload } from 'antd';
+import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from "react";
+import { request, history } from '@umijs/max';
+import { useParams } from "@@/exports";
 
 import { getFile, getBase64 } from '@/components/Helpers/ImageConversion';
-
 
 const waitTime = (time = 100) => {
     return new Promise((resolve) => {
@@ -22,6 +22,14 @@ const waitTime = (time = 100) => {
             resolve(true);
         }, time);
     });
+};
+
+const initialValues = {
+    image_url: '',
+    title: '',
+    description: '',
+    tutors: '',
+    users: '',
 };
 
 
@@ -46,14 +54,14 @@ const onFinishHandlerForm = async (values, imageUrl) => {
             users: values?.users?.map( ( user ) => user?.user ) || [],
         };
 
-        return await request('/api/categories', {
-            method: 'POST',
+        return await request('/api/categories/' + values?.category_id, {
+            method: 'PUT',
             data: request_data,
 
         }).then(async (api_response) => {
 
             /**
-             * Category Created then show message and redirect to listing screen
+             * Category Updated then show message and redirect to listing screen
              */
             if (api_response?.data?.id > 0) {
                 message.success('Submitted successfully');
@@ -74,30 +82,26 @@ const onFinishHandlerForm = async (values, imageUrl) => {
 };
 
 
-const CreateCategory = () => {
+const UpdateCategory = () => {
+
+    const params = useParams();
 
     /**
      * States of Component
      */
 
     const [form] = Form.useForm();
+    const [categoryId, setCategoryId] = useState(0);
 
-    const [imageUrl, setImageUrl] = useState(DEFAULT_PLACEHOLDER_IMAGE_URL);
+    const [featuredImageUrl, setFeaturedImageUrl] = useState('');
+    const [imageUrl, setImageUrl] = useState(featuredImageUrl);
+
     const [ allTutors, setAllTutors ] = useState( [] );
     const [ allUsers, setAllUsers ] = useState( [] );
 
-    const initialValues = {
-        tutors: [
-			{
-				tutor: undefined, // Shows 1 empty dropdown
-			},
-		],
-		users: [
-			{
-				user: undefined, // Shows 1 empty dropdown
-			},
-		]
-	};
+    useEffect(() => {
+        setCategoryId(params.id);
+    }, []); // empty dependency array so it only runs once at render
 
 
     /**
@@ -157,15 +161,83 @@ const CreateCategory = () => {
     return (
         <PageContainer>
             
+                <Row gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
+                    <Col flex="auto">
+
+                    </Col>
+
+                    <Col flex="100px">
+                        <Button
+                            type="primary"
+                            key="new"
+                            onClick={() => {
+                                history.push('/admin-app/categories/new');
+                            }}
+                            style={{marginBlockEnd: 15}}
+                            >
+                            <PlusOutlined/> New
+                        </Button>
+                    </Col>
+                </Row>
                 <ProForm
-                    onFinish={async (values) => {
-                        await waitTime(2000);
-                        await onFinishHandlerForm(values, imageUrl);
-                    }}
                     layout='vertical'
                     grid={true}
                     initialValues={initialValues}
                     form={form}
+                    params={ { 'category_id': categoryId } }
+                    request={
+                    
+                        async (params= {} ) => {
+
+                            console.log('proform-params');
+                            console.log(params);
+
+                            if( params?.category_id == 0 ) {
+                                return;
+                            }
+
+                            await waitTime(2000);
+
+                            return await request('/api/categories/' + params?.category_id, {
+                                method: 'GET',
+                            }).then(async (api_response) => {
+                                console.log('api_response');
+                                console.log(api_response);
+
+                                setFeaturedImageUrl(api_response?.data?.image_url);
+
+                                return {
+                                    ...initialValues,
+                                    image_url: api_response?.data?.image_url,
+                                    title: api_response?.data?.title,
+                                    description: api_response?.data?.description,
+                                    tutors: api_response?.data?.tutors?.map( ( tutor ) => ( {
+                                        tutor: tutor?.id
+                                    } ) ) || [],
+                                    users: api_response?.data?.users?.map( ( user ) => ( {
+                                        user: user?.id
+                                    } ) ) || []
+                                };
+
+                            }).catch(function (error) {
+                                console.log(error);
+                            });
+
+                        }
+                    }
+                    onFinish={async (values) => {
+                        await waitTime(2000);
+
+                        values.category_id = categoryId;
+                        values.image_url = imageUrl;
+
+                        console.log('imageUrl');
+                        console.log(imageUrl);
+
+                        console.log('Final payload values:', values); // Add this
+                        
+                        await onFinishHandlerForm(values, imageUrl);
+                    }}
                     submitter={{
                         render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
                     }}
@@ -200,6 +272,7 @@ const CreateCategory = () => {
                                             width='100%'
                                             height={200}
                                             src={imageUrl}
+                                            fallback={('' !== imageUrl || null === imageUrl ? imageUrl : DEFAULT_PLACEHOLDER_IMAGE_URL)}
                                         />
                                     </Col>
                                     <Col span={24} style={{ textAlign: 'center'}}>
@@ -395,4 +468,4 @@ const CreateCategory = () => {
 
 };
 
-export default CreateCategory;
+export default UpdateCategory;

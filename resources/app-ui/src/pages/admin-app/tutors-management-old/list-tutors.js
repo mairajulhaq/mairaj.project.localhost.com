@@ -1,10 +1,13 @@
 import {EditOutlined, PlusOutlined} from '@ant-design/icons';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Avatar, message } from 'antd';
-import { request, history } from '@umijs/max';
+import {
+  PageContainer,
+  ProTable
+} from '@ant-design/pro-components';
+import {Button, Avatar, message} from 'antd';
+import {request, history} from '@umijs/max';
 import moment from 'moment';
-import { useModel } from 'umi';
-import { useRef } from "react";
+import {useModel} from 'umi';
+import {useRef, useState} from "react";
 
 import DeleteTutor from './delete-tutor';
 
@@ -144,6 +147,7 @@ const ListTutors = () => {
                     defaultPageSize: 10,
                     showSizeChanger: true,
                     pageSizeOptions: [10, 20, 50, 100],
+                    onChange: (page) => console.log(page),
                 }}
                 toolBarRender={() => [
                     <Button
@@ -154,11 +158,20 @@ const ListTutors = () => {
                         }}
                     >
                         <PlusOutlined/> New
-                    </Button>
+                    </Button>,
                 ]}
                 request={
 
                         async (params, sort, filter) => {    
+
+                        console.log('params');
+                        console.log(params);
+
+                        console.log('params - sort');
+                        console.log(sort);
+
+                        console.log('params - filter');
+                        console.log(filter);
 
                         /**
                          * Delay the API request
@@ -174,6 +187,14 @@ const ListTutors = () => {
                             },
 
                         }).then(async (api_response) => {
+                            console.log('api_response');
+                            console.log(api_response);
+
+                            console.log('api_response.data');
+                            console.log(api_response.data);
+
+                            console.log('api_response.data.data');
+                            console.log(api_response.data.data);
 
                             return { data: api_response.data.data, total: api_response.data.total, current_page: api_response.data.current_page};
 
@@ -184,6 +205,7 @@ const ListTutors = () => {
                     }}
                 columns={columns}
             />
+
 
         </PageContainer>
     );

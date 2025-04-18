@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Models\ClassModel;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -13,7 +13,7 @@ use App\Traits\ResponseTrait;
 
 use Illuminate\Support\Facades\Log;
 
-class CategoryController extends Controller
+class ClassController extends Controller
 {
 
     /**
@@ -36,18 +36,16 @@ class CategoryController extends Controller
             $search   = ( isset($request['search']) && ! empty(isset($request['search'])) ) ? $request['search'] : '';
 
             if( ! empty($search) ){
-                $data = Category::orderBy($orderBy, $order)
+                $data = ClassModel::orderBy($orderBy, $order)
                     ->where('title', 'like', '%'.$search.'%')
                     ->orWhere('description', 'like', '%'.$search.'%')
-                    ->with('tutors', 'users')
                     ->paginate($perPage);
             }else{
-                $data = Category::orderBy($orderBy, $order)
-                    ->with('tutors', 'users')
+                $data = ClassModel::orderBy($orderBy, $order)
                     ->paginate($perPage);
             }
 
-            return $this->responseSuccess($data, 'Category List Fetch Successfully !');
+            return $this->responseSuccess($data, 'Class List Fetch Successfully !');
 
         } catch (\Exception $e) {
             return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
