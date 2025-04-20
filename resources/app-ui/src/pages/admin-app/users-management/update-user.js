@@ -95,8 +95,7 @@ const UpdateUser = () => {
 
     const [form] = Form.useForm();
     const [userId, setUserId] = useState(0);
-    const [userProfileImageUrl, setUserProfileImageUrl] = useState('');
-    const [imageUrl, setImageUrl] = useState(userProfileImageUrl);
+    const [imageUrl, setImageUrl] = useState(DEFAULT_USER_PROFILE_IMAGE_URL);
 
     useEffect(() => {
         setUserId(params.id);
@@ -178,7 +177,7 @@ const UpdateUser = () => {
                                 console.log('api_response');
                                 console.log(api_response);
 
-                                setUserProfileImageUrl(api_response?.data?.image_url);
+                                setImageUrl(api_response?.data?.image_url);
 
                                 return {
                                     ...initialValues,
