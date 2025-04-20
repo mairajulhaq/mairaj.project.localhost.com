@@ -268,6 +268,7 @@ const CreateTutor = () => {
                                         name={'name'}
                                         label="Name"
                                         placeholder="Type Your Name"
+                                        rules={[{ required: true }]}
                                         colProps={{xs: 24, sm: 24, md: 12, lg: 12, xl: 12}}
                                     />
                                     <ProFormText
@@ -282,12 +283,14 @@ const CreateTutor = () => {
                                     <ProFormDatePicker
                                         label="Date of Birth"
                                         name={'date_of_birth'}
+                                        rules={[{ required: true }]}
                                         colProps={{xs: 24, sm: 24, md: 12, lg: 12, xl: 12}}
                                     />
                                     <ProFormText
                                         name={'mobile_no'}
                                         label="Mobile No"
                                         placeholder="Type Your Mobile No"
+                                        rules={[{ required: true }]}
                                         colProps={{xs: 24, sm: 24, md: 12, lg: 12, xl: 12}}
                                     />
                                 </ProForm.Group>
@@ -299,6 +302,7 @@ const CreateTutor = () => {
                                             rows: 6,
                                         } }
                                         placeholder="Share a little biographical information to fill out your profile. This may be shown publicly. "
+                                        rules={[{ required: true }]}
                                         colProps={{xs: 24, sm: 24, md: 24, lg: 24, xl: 24}}
                                     />
                                 </ProForm.Group>

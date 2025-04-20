@@ -7,16 +7,12 @@ import {
     ProFormTextArea,
     ProFormList,
     ProFormSelect,
-    ProFormSegmented,
-    ProFormUploadDragger
+    ProFormSegmented
 } from '@ant-design/pro-components';
-import {Row, Col, message, Button, Form, Image, Upload} from 'antd';
-import {UploadOutlined} from '@ant-design/icons';
-import React, {useEffect, useState} from "react";
-import {request, history} from '@umijs/max';
-
-import { getFile, getBase64 } from '@/components/Helpers/ImageConversion';
-
+import { message, Form } from 'antd';
+import React, { useEffect, useState } from "react";
+import { request, history } from '@umijs/max';
+import { useModel } from "@@/exports";
 
 const waitTime = (time = 100) => {
     return new Promise((resolve) => {
@@ -26,11 +22,19 @@ const waitTime = (time = 100) => {
     });
 };
 
+const initialValues = {
+    users: [
+        {
+            user: undefined, // Shows 1 empty dropdown
+        },
+    ]
+};
+
 
 /**
  * Form Submission handler and API Request Performer
  */
-const onFinishHandlerForm = async (values, imageUrl) => {
+const onFinishHandlerForm = async (values, authorId) => {
     console.log('onFinishHandlerForm');
     console.log('Received values of form: ', values);
 
@@ -40,12 +44,12 @@ const onFinishHandlerForm = async (values, imageUrl) => {
     try {
 
         const request_data = {
-            // image_url: imageUrl,
             title: values?.title,
             description: values?.description,
             status: values?.status,
-            author_id: 1,
-            category_id: 2,
+            author_id: authorId,
+            category_id: values?.category_id,
+            users: values?.users?.map( ( user ) => user?.user ) || [],
         };
 
         return await request('/api/classes', {
@@ -82,8 +86,60 @@ const CreateClass = () => {
      * States of Component
      */
 
+    const {initialState, loading, refresh, setInitialState} = useModel('@@initialState');
+    const [authorId, setAuthorId] = useState(0);
     const [form] = Form.useForm();
-    const [imageUrl, setImageUrl] = useState(DEFAULT_PLACEHOLDER_IMAGE_URL);
+    const [ allCategories, setAllCategories ] = useState( [] );
+    const [ allUsers, setAllUsers ] = useState( [] );
+
+    /**
+     * Set Class AuthorId who's created the class
+     */
+    useEffect(() => {
+        setAuthorId(initialState?.currentUser?.id);
+    }, []); //empty dependency array so it only runs once at render
+
+    /**
+     * Start - Categories Data
+     */
+    useEffect( () => {
+        return request('/api/categories', {
+    
+        }).then( ( api_response ) => {
+            const table_data = api_response.data.data.map( ( item, i ) => ( {
+                value: item?.id,
+                label: item?.title,
+            } ) );
+    
+            setAllCategories( table_data );
+    
+            return table_data;
+        } );
+    }, [] );
+
+    /**
+     * Start - Users Data
+     */
+    useEffect( () => {
+        return request('/api/users', {
+    
+            params: {
+                role: 'user',
+                page: 1,
+                per_page: 1000,
+            },
+    
+        }).then( ( api_response ) => {
+            const table_data = api_response.data.data.map( ( item, i ) => ( {
+                value: item?.id,
+                label: item?.name,
+            } ) );
+    
+            setAllUsers( table_data );
+    
+            return table_data;
+        } );
+    }, [] );
 
     /**
      * The Component Output
@@ -95,10 +151,11 @@ const CreateClass = () => {
                 <ProForm
                     onFinish={async (values) => {
                         await waitTime(2000);
-                        await onFinishHandlerForm(values, imageUrl);
+                        await onFinishHandlerForm(values, authorId);
                     }}
                     layout='vertical'
                     grid={true}
+                    initialValues={initialValues}
                     form={form}
                     submitter={{
                         render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
@@ -151,26 +208,57 @@ const CreateClass = () => {
 								} }
 								colProps={ { xs: 24, sm: 24, md: 6, lg: 6, xl: 6 } }
 							/>
-                        </ProForm.Group>
-                        <ProForm.Group size={ 24 }>
-                            <ProFormUploadDragger
-                                name={ 'paymen_proof_image_url' }
-								label="Upload Payment Proof"
-                                max={1}
-                                title={'Click or drag files into this area to upload'}
-                                description={'Supported extension: .jpg .png .docx'}
-                                accept={'.jpg, .png, .docx'}
-                                rules={[{ required: true, message: 'Please upload payment proof image' }]}
-                                colProps={{xs: 24, sm: 24, md: 24, lg: 24, xl: 24}}
-                                // action= {(SITE_URL+"/wp-json/wp/v2/form-document/")}
-                                // onChange={ async (info) => {
-                                //     if (info.file.status === 'done') {
-                                //         setFormDocumentDetails(info.file.response.data);
-                                //     }
-                                // }}
+                            <ProFormSelect
+                                name={ 'category_id' }
+                                label="Categories"
+                                showSearch
+                                options={ allCategories }
+                                debounceTime={ 300 }
+                                placeholder="Please Select a Category"
+                                rules={ [ { required: true } ] }
+                                colProps={ { xs: 24, sm: 24, md: 18, lg: 18, xl: 18 } }
                             />
                         </ProForm.Group>
                         
+                    </ProCard>
+
+                    <ProCard
+                        title="Assign Users"
+                        bordered
+                        headerBordered
+                        collapsible
+                        size="default"
+                        type="inner"
+                        style={ {
+                            marginBlockEnd: 15,
+                            minWidth: 800,
+                            maxWidth: '100%',
+                        } }
+                    >
+                        <ProForm.Group size={ 24 }>
+                            <ProFormList
+                                name={ 'users' }
+                                min={ 1 }
+                                copyIconProps={ { tooltipText: 'Copy this user' } }
+                                deleteIconProps={ { tooltipText: 'Delete this user' } }
+                                creatorButtonProps={ {
+                                    creatorButtonText: 'Add New User',
+                                } }
+                            >
+                                <ProForm.Group size={ 24 }>
+                                    <ProFormSelect
+                                        name={ 'user' }
+                                        label="User"
+                                        showSearch
+                                        options={ allUsers }
+                                        debounceTime={ 300 }
+                                        placeholder="Please Select a User"
+                                        rules={ [ { required: true } ] }
+                                        colProps={ { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 } }
+                                    />
+                                </ProForm.Group>
+                            </ProFormList>
+                        </ProForm.Group>
                     </ProCard>
                     
                 </ProForm>

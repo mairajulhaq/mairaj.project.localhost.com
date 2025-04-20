@@ -103,8 +103,7 @@ const UpdateProfile = () => {
     const experiencesTableRef = useRef();
     const [userId, setUserId] = useState(0);
 
-    const [userProfileImageUrl, setUserProfileImageUrl] = useState('');
-    const [imageUrl, setImageUrl] = useState(userProfileImageUrl);
+    const [imageUrl, setImageUrl] = useState(DEFAULT_USER_PROFILE_IMAGE_URL);
 
     const [editTutorCreateQualificationModelOpen, setEditTutorCreateQualificationModelOpen] = useState(false);
 
@@ -330,7 +329,7 @@ const UpdateProfile = () => {
                                 console.log('api_response');
                                 console.log(api_response);
 
-                                setUserProfileImageUrl(api_response?.data?.image_url);
+                                setImageUrl(api_response?.data?.image_url);
 
                                 return {
                                     ...initialValues,
@@ -398,7 +397,7 @@ const UpdateProfile = () => {
                                             width='100%'
                                             height={200}
                                             src={imageUrl}
-                                            fallback={('' !== userProfileImageUrl ? userProfileImageUrl : DEFAULT_USER_PROFILE_IMAGE_URL)}
+                                            fallback={('' !== imageUrl ? imageUrl : DEFAULT_USER_PROFILE_IMAGE_URL)}
                                         />
                                     </Col>
 
@@ -479,6 +478,7 @@ const UpdateProfile = () => {
                                         name={'name'}
                                         label="Name"
                                         placeholder="Type Your Name"
+                                        rules={[{ required: true }]}
                                         colProps={{xs: 24, sm: 24, md: 12, lg: 12, xl: 12}}
                                     />
                                     <ProFormText
@@ -494,12 +494,14 @@ const UpdateProfile = () => {
                                     <ProFormDatePicker
                                         label="Date of Birth"
                                         name={'date_of_birth'}
+                                        rules={[{ required: true }]}
                                         colProps={{xs: 24, sm: 24, md: 12, lg: 12, xl: 12}}
                                     />
                                     <ProFormText
                                         name={'mobile_no'}
                                         label="Mobile No"
                                         placeholder="Type Your Mobile No"
+                                        rules={[{ required: true }]}
                                         colProps={{xs: 24, sm: 24, md: 12, lg: 12, xl: 12}}
                                     />
                                 </ProForm.Group>
@@ -511,6 +513,7 @@ const UpdateProfile = () => {
                                             rows: 6,
                                         } }
                                         placeholder="Share a little biographical information to fill out your profile. This may be shown publicly. "
+                                        rules={[{ required: true }]}
                                         colProps={{xs: 24, sm: 24, md: 24, lg: 24, xl: 24}}
                                     />
                                 </ProForm.Group>
@@ -536,6 +539,7 @@ const UpdateProfile = () => {
                             actionRef={qualificationsTableRef}
                             rowKey="id"
                             search={false}
+                            options={false}
                             pagination={{
                                 defaultPageSize: 10,
                                 showSizeChanger: true,
@@ -610,6 +614,7 @@ const UpdateProfile = () => {
                             actionRef={experiencesTableRef}
                             rowKey="id"
                             search={false}
+                            options={false}
                             pagination={{
                                 defaultPageSize: 10,
                                 showSizeChanger: true,

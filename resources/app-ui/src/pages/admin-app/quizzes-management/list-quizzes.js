@@ -1,15 +1,11 @@
-import {EditOutlined, PlusOutlined} from '@ant-design/icons';
-import {
-  PageContainer,
-  ProTable
-} from '@ant-design/pro-components';
-import {Button, Avatar, message} from 'antd';
-import {request, history} from '@umijs/max';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { Button, message, Tag } from 'antd';
+import { request, history } from '@umijs/max';
 import moment from 'moment';
-import {useModel} from 'umi';
-import {useRef, useState} from "react";
-
-import DeleteTutor from './delete-tutor';
+import { useModel } from 'umi';
+import { useRef } from "react";
+import DeleteQuiz from './delete-quiz';
 
 export const waitTimePromise = async (time = 100) => {
     return new Promise((resolve) => {
@@ -23,7 +19,7 @@ export const waitTime = async (time = 100) => {
     await waitTimePromise(time);
 };
 
-const ListTutors = () => {
+const ListQuizzes = () => {
 
     const {initialState, loading, refresh, setInitialState} = useModel('@@initialState');
 
@@ -33,7 +29,7 @@ const ListTutors = () => {
     console.log('loading');
     console.log(loading);
 
-    const tutorsTableRef = useRef();
+    const quizzesTableRef = useRef();
 
     const columns = [
 
@@ -46,44 +42,28 @@ const ListTutors = () => {
             defaultSortOrder: 'descend',
         },
         {
-            title: "Name",
-            key: 'table-column-name',
-            copyable: true,
-            hideInSearch: true,
-            render: (dom, record) => {
-
-                return (
-                    <div>
-
-                        <Avatar size={"large"}
-                        src={(null !== record?.image_url ? record?.image_url : DEFAULT_USER_PROFILE_IMAGE_URL)}/>
-                        <span style={{margin: "0px 0px 0px 10px"}}>
-
-                            {record?.name}
-
-                        </span>
-
-                    </div>
-                );
-            },
-        },
-        {
-            title: "Email",
-            dataIndex: 'email',
-            key: 'table-column-email',
-            hideInSearch: true,
-        },
-        {
-            title: "Qualification",
-            dataIndex: 'qualifications',
-            key: 'table-column-qualification',
-            hideInSearch: true,
-            render: (text, record, _, action) => [
-
-                record?.qualifications?.length > 0 ? record.qualifications.map((q) => q.degree).join(", ") : "No qualifications available"
-
-            ],
-        },
+			title: 'Title',
+			dataIndex: 'title',
+			key: 'table-column-title',
+			hideInSearch: true,
+		},
+		{
+			title: 'Description',
+			dataIndex: 'description',
+			key: 'table-column-description',
+			hideInSearch: true,
+		},
+		{
+			title: 'Status',
+			dataIndex: 'status',
+			key: 'table-column-status',
+			hideInSearch: true,
+			render: ( text ) => (
+				<Tag color={ text === 'active' ? 'green' : 'red' }>
+					{ text === 'active' ? 'Active' : 'In-Active' }
+				</Tag>
+			),
+		},
         {
             title: "Created Date",
             dataIndex: 'created_at',
@@ -115,23 +95,23 @@ const ListTutors = () => {
                 <Button
                     key="editable"
                     onClick={() => {
-                        history.push('/admin-app/tutors/edit/' + record.id);
+                        history.push('/admin-app/quizzes/edit/' + record.id);
                     }}
                 >
                     <EditOutlined />
                 </Button>,
 
-                <DeleteTutor
+                <DeleteQuiz
                     rowId={ record?.id }
                     onFinish={ ( { status, text_message } ) => {
                         if ( status ) {
                             message.success( text_message );
-                            tutorsTableRef.current?.reload();
+                            quizzesTableRef.current?.reload();
                         } else {
                             message.error( text_message );
                         }
                     } }
-                />,
+                />
 
             ],
         },
@@ -140,21 +120,21 @@ const ListTutors = () => {
     return (
         <PageContainer>
             <ProTable
-                actionRef={tutorsTableRef}
+                actionRef={quizzesTableRef}
                 rowKey="id"
                 search={false}
+                options={false}
                 pagination={{
                     defaultPageSize: 10,
                     showSizeChanger: true,
                     pageSizeOptions: [10, 20, 50, 100],
-                    onChange: (page) => console.log(page),
                 }}
                 toolBarRender={() => [
                     <Button
                         type="primary"
                         key="new"
                         onClick={() => {
-                            history.push('/admin-app/tutors/new');
+                            history.push('/admin-app/quizzes/new');
                         }}
                     >
                         <PlusOutlined/> New
@@ -162,39 +142,21 @@ const ListTutors = () => {
                 ]}
                 request={
 
-                        async (params, sort, filter) => {    
-
-                        console.log('params');
-                        console.log(params);
-
-                        console.log('params - sort');
-                        console.log(sort);
-
-                        console.log('params - filter');
-                        console.log(filter);
+                        async (params, sort, filter) => {
 
                         /**
                          * Delay the API request
                          */
                         await waitTime(2000);
 
-                        return await request('/api/users', {
+                        return await request('/api/quizzes', {
 
                             params: {
                                 sort: {...sort},
                                 pagination: {...params},
-                                role: 'tutor',
                             },
 
                         }).then(async (api_response) => {
-                            console.log('api_response');
-                            console.log(api_response);
-
-                            console.log('api_response.data');
-                            console.log(api_response.data);
-
-                            console.log('api_response.data.data');
-                            console.log(api_response.data.data);
 
                             return { data: api_response.data.data, total: api_response.data.total, current_page: api_response.data.current_page};
 
@@ -206,9 +168,8 @@ const ListTutors = () => {
                 columns={columns}
             />
 
-
         </PageContainer>
     );
 };
 
-export default ListTutors;
+export default ListQuizzes;

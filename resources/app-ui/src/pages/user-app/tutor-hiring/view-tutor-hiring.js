@@ -217,6 +217,7 @@ const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime 
                         // actionRef={qualificationsTableRef}
                         rowKey="id"
                         search={false}
+                        options={false}
                         pagination={{
                             defaultPageSize: 10,
                             showSizeChanger: true,
@@ -253,6 +254,7 @@ const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime 
                         // actionRef={experiencesTableRef}
                         rowKey="id"
                         search={false}
+                        options={false}
                         pagination={{
                             defaultPageSize: 10,
                             showSizeChanger: true,

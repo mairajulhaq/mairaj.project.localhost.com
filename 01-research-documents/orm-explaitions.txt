@@ -1,0 +1,6 @@
+
+
+--- hasOne vs belongsTo ---
+https://medium.com/@techaiinsights2022/hasone-vs-belongsto-a-simple-guide-to-laravel-relationships-32ee031f3dc9
+https://stackoverflow.com/questions/37582848/what-is-the-difference-between-belongsto-and-hasone-in-laravel
+

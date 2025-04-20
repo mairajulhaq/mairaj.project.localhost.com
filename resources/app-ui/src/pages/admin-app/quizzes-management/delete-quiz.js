@@ -1,16 +1,16 @@
 import { Button, Popconfirm } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined } from '@ant-design/icons';
-import {request} from '@umijs/max';
+import { request } from '@umijs/max';
 
-const DeleteTutor = ( { rowId, onFinish } ) => {
+const DeleteQuiz = ( { rowId, onFinish } ) => {
 	return (
 		<Popconfirm
-			title="Delete the Tutor"
-			description="Are you sure you want to delete this Tutor?"
+			title="Delete the Quiz"
+			description="Are you sure you want to delete this Quiz?"
 			icon={ <QuestionCircleOutlined style={ { color: 'red' } } /> }
 			placement="left"
 			onConfirm={ async () => {
-				return await request('/api/users/' + rowId, {
+				return await request('/api/quizzes/' + rowId, {
 
 					method: 'DELETE',
 
@@ -19,13 +19,13 @@ const DeleteTutor = ( { rowId, onFinish } ) => {
 					if ( response.status === true ) {
 						onFinish( {
 							status: true,
-							text_message: 'Tutor deleted successfully',
+							text_message: 'Quiz deleted successfully',
 						} );
 					} else {
 						onFinish( {
 							status: false,
 							text_message:
-								'Failed to delete Tutor: Invalid response',
+								'Failed to delete Quiz: Invalid response',
 						} );
 					}
 				} );
@@ -39,4 +39,4 @@ const DeleteTutor = ( { rowId, onFinish } ) => {
 		</Popconfirm>
 	);
 };
-export default DeleteTutor;
+export default DeleteQuiz;

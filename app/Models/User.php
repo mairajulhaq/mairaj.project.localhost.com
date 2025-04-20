@@ -4,9 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+
 use App\Models\Qualification;
 use App\Models\Experience;
+
 use Illuminate\Notifications\Notifiable;
+
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use Laravel\Sanctum\HasApiTokens;
 
@@ -55,26 +59,31 @@ class User extends Authenticatable
         ];
     }
 
-    /**
+    /** 
      * Qualifications
-     *
-     * Get All qualifications uploaded by user
-     *
+     * 
+     * Purpose: Get All qualifications associated by user
+     * Relationship: One to Many / Has Many
+     * https://laravel.com/docs/12.x/eloquent-relationships#one-to-many
+     * 
      * @return object Eloquent qualifications object
      */
-    public function qualifications()
+    public function qualifications(): HasMany
     {
         return $this->hasMany(Qualification::class)->orderBy('id', 'desc');
     }
 
-    /**
+    
+    /** 
      * Experiences
-     *
-     * Get All experiences uploaded by user
-     *
-     * @return object Eloquent experiences object
+     * 
+     * Purpose: Get All Experiences associated by user
+     * Relationship: One to Many / Has Many
+     * https://laravel.com/docs/12.x/eloquent-relationships#one-to-many
+     * 
+     * @return object Eloquent Experiences object
      */
-    public function experiences()
+    public function experiences(): HasMany
     {
         return $this->hasMany(Experience::class)->orderBy('id', 'desc');
     }
