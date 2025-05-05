@@ -28,6 +28,8 @@ class Quiz extends Model
         'title',
         'description',
         'status',
+        'passing_percentage',
+        'attempts_limit',
         'author_id',
         'class_id',
     ];

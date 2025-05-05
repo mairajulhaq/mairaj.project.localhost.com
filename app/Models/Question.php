@@ -27,6 +27,7 @@ class Question extends Model
         'title',
         'choices',
         'answer',
+        'marks',
         'author_id',
         'quiz_id',
     ];
