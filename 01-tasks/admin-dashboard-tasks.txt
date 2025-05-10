@@ -1,0 +1,57 @@
+Remaining Seeders:
+
+- Address
+- Categories
+- Classes
+- Quizzes
+-- Questions
+- Fee Vouchers
+
+Remaining APIs:
+- Address
+- Fee Vouchers
+================================================================================
+
+Note:
+1. Currently, I'm writing all of these as it is which they are but Some of The Components/Menus Need to move on other dashboards like Classes, Quizzes, Questions etc.
+2. I think first you need to work on logics and leave the UI work for me if all logics completed then you can work on UI.
+
+Remaining UI Task:
+
+- Profile Component
+-- Address Section
+
+- Create Tutor Component
+-- Address Section
+b.	Manage tutor association into multiple categories.
+c.	Share login credentials with the tutor via email/SMS after registration.
+d.	Can view the list of the particular tutor’s registered users/students.
+
+- Edit Tutor Component
+-- Address Section
+b.	Manage tutor association into multiple categories.
+c.	Share login credentials with the tutor via email/SMS after registration.
+d.	Can view the list of the particular tutor’s registered users/students.
+
+- Create User Component
+-- Address Section
+b.	View the list of fee vouchers and can filter by status. 
+c.	Can verify uploaded fee voucher and generate new fee voucher. 
+d.	View a list of student’s hired tutors and filter by category/subject. 
+
+- Edit User Component
+-- Address Section
+b.	View the list of fee vouchers and can filter by status. 
+c.	Can verify uploaded fee voucher and generate new fee voucher. 
+d.	View a list of student’s hired tutors and filter by category/subject. 
+
+- Create Quiz Component
+-- Questions Section
+
+- Edit Quiz Component
+-- Questions Section
+
+- Fee Vouchers Component
+a.	Create, edit, and delete user/student’s fee vouchers.
+b.	View the list of fee vouchers and filter by status or user/student etc.
+c.	View and Verify uploaded fee vouchers.

@@ -28,6 +28,7 @@ class ClassModel extends Model
         'title',
         'description',
         'status',
+        'fee_amount',
         'author_id',
         'category_id',
     ];

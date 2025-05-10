@@ -1,0 +1,19 @@
+Remaining UI Task:
+
+- Profile Component
+-- Address Section
+-- can update resume.
+
+- Students Component
+a.	Can view the list of his/her students and can filter by category/subject.
+b.	Can view his/her student’s complete profile.
+
+- Classes Component
+a.	View the list of created classes and filter by category and timing.
+b.	Create, edit, and delete a class in a particular category/subject.
+c.	Can invite enrolled students’ to the particular class by email.
+
+- Quizzes Component
+a.	View the list of created Quizzes and filter by category and class timing.
+b.	Create, edit, and delete a quiz in a particular category/subject.
+c.	View students’ submitted quiz attempts and track their progress.

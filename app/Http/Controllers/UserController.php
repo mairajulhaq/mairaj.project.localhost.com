@@ -77,6 +77,12 @@ class UserController extends Controller
                     'bio_data'     => 'nullable|max:5000',
                     'mobile_no'     => 'required|string|max:50',
                     'date_of_birth'     => 'required|date_format:Y-m-d',
+                    'address' => 'nullable|array',
+                    'address.street' => 'required_with:address|string',
+                    'address.country' => 'required_with:address|string',
+                    'address.province' => 'required_with:address|string',
+                    'address.city' => 'required_with:address|string',
+                    'address.postal_code' => 'required_with:address|numeric',
                 ],
                 [
                     'name.required'     => 'Please give your name',
@@ -92,6 +98,17 @@ class UserController extends Controller
                     'mobile_no.max'          => 'Please give your mobile no between 20 characters',
                     'date_of_birth.required'    => 'Please give your date of birth',
                     'date_of_birth.date_format' => 'Please make sure your date of birth is formatted as Y-m-d',
+                    'address.array' => 'The address must be a valid JSON object.',
+                    'address.street.required_with' => 'Street address is required when providing an address.',
+                    'address.street.string' => 'Street address must be a text value.',
+                    'address.country.required_with' => 'Country is required when providing an address.',
+                    'address.country.string' => 'Country must be a text value.',
+                    'address.province.required_with' => 'Province/State is required when providing an address.',
+                    'address.province.string' => 'Province/State must be a text value.',
+                    'address.city.required_with' => 'City is required when providing an address.',
+                    'address.city.string' => 'City must be a text value.',
+                    'address.postal_code.required_with' => 'ZIP/Postal code is required when providing an address.',
+                    'address.postal_code.numeric' => 'ZIP/Postal code must be a number.',
                 ]
             ); 
 
@@ -131,7 +148,53 @@ class UserController extends Controller
 
         try {
 
-            $data = $request->all();
+            // $data = $request->all();
+
+            $request_data = $request->validate(
+                [
+                    'name'     => 'required|string|max:50',
+                    'role'     => 'required|string|max:50',
+                    'email'    => 'required|max:255|email|unique:users',
+                    'password' => 'required',
+                    'image_url'     => 'required|string',
+                    'bio_data'     => 'nullable|max:5000',
+                    'mobile_no'     => 'required|string|max:50',
+                    'date_of_birth'     => 'required|date_format:Y-m-d',
+                    'address' => 'nullable|array',
+                    'address.street' => 'required_with:address|string',
+                    'address.country' => 'required_with:address|string',
+                    'address.province' => 'required_with:address|string',
+                    'address.city' => 'required_with:address|string',
+                    'address.postal_code' => 'required_with:address|numeric',
+                ],
+                [
+                    'name.required'     => 'Please give your name',
+                    'name.max'          => 'Please give your name between 50 characters',
+                    'role.required'     => 'Please give your role',
+                    'role.max'          => 'Please give your role between 50 characters',
+                    'email.required'    => 'Please give your email',
+                    'email.unique'      => 'User already exists by this email, please try with another email.',
+                    'password.required' => 'Please give your password',
+                    'image_url.required'         => 'Please give a valid user profile image',
+                    'bio_data.max' => 'Please give bio description maximum of 5000 characters',
+                    'mobile_no.required'     => 'Please give your mobile no',
+                    'mobile_no.max'          => 'Please give your mobile no between 20 characters',
+                    'date_of_birth.required'    => 'Please give your date of birth',
+                    'date_of_birth.date_format' => 'Please make sure your date of birth is formatted as Y-m-d',
+                    'address.array' => 'The address must be a valid JSON object.',
+                    'address.street.required_with' => 'Street address is required when providing an address.',
+                    'address.street.string' => 'Street address must be a text value.',
+                    'address.country.required_with' => 'Country is required when providing an address.',
+                    'address.country.string' => 'Country must be a text value.',
+                    'address.province.required_with' => 'Province/State is required when providing an address.',
+                    'address.province.string' => 'Province/State must be a text value.',
+                    'address.city.required_with' => 'City is required when providing an address.',
+                    'address.city.string' => 'City must be a text value.',
+                    'address.postal_code.required_with' => 'ZIP/Postal code is required when providing an address.',
+                    'address.postal_code.numeric' => 'ZIP/Postal code must be a number.',
+                ]
+            ); 
+
             $user = User::find($id);
 
             if (is_null($user)) {
@@ -139,7 +202,7 @@ class UserController extends Controller
             }
 
             // If everything is OK, then update.
-            $user->update($data);
+            $user->update($request_data);
 
             $response_data = User::find($user->id);
 

@@ -16,7 +16,9 @@ return new class extends Migration
             $table->id();
             $table->string('title', 255);
             $table->longText('description')->nullable();
-            $table->string('status', 255);
+            $table->integer('amount');
+            $table->date('due_date')->nullable();
+            $table->string('status', 255)->comment('UnPaid | Paid');
             $table->string('payment_proof_image_url')->nullable();
             $table->unsignedBigInteger('author_id')->comment('Author ID');
             $table->unsignedBigInteger('user_id')->comment('User ID');

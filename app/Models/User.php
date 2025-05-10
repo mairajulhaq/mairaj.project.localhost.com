@@ -33,7 +33,8 @@ class User extends Authenticatable
         'image_url',
         'bio_data',
         'mobile_no',
-        'date_of_birth'
+        'date_of_birth',
+        'address'
     ];
 
     /**
@@ -56,7 +57,25 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'address' => 'array',
         ];
+    }
+
+
+    /**
+     * Set the address attribute - automatically serializes array to JSON
+     */
+    public function setAddressAttribute($value)
+    {
+        $this->attributes['address'] = json_encode($value);
+    }
+
+    /**
+     * Get the address attribute - automatically deserializes JSON to array
+     */
+    public function getAddressAttribute($value)
+    {
+        return json_decode($value, true);
     }
 
     /** 

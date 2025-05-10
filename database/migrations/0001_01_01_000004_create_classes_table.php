@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title', 255);
             $table->longText('description')->nullable();
             $table->string('status', 255);
+            $table->integer('fee_amount');
             $table->unsignedBigInteger('author_id')->comment('Author User ID');
             $table->unsignedBigInteger('category_id')->comment('Category ID');
             $table->timestamps();

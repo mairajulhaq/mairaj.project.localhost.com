@@ -1,0 +1,37 @@
+
+
+The following columns are missing in the 'fee_vouchers' table and related diagrams
+
+due_date = date
+amount = int
+
+The following columns are missing in the 'classes' table and related diagrams
+
+fee_amount = int
+
+The following columns are missing in the 'users' table and related diagrams
+
+address = array
+
+------------------------------------------------
+
+We need to remove category_users table instead of that we will create relationship in category model 
+with users based on classes tables users like classes_users 
+
+for refrence ejaz project Payment model trip()
+
+also maybe we can remove quiz_users as well 
+
+---------------------------------------------
+
+php artisan migrate:refresh --seed
+
+
+php artisan db:seed --class=QuizSeeder
+
+php artisan migrate:fresh --seed --seeder=QuizSeeder
+
+
+======= Admin - Dashboard - UI Changes =========
+
+We will remove 'questions mangement' sidebar menu because our questions are quiz related so they will only managed from quiz screen.

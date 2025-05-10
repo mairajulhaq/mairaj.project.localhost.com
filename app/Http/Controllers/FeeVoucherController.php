@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClassModel;
+use App\Models\FeeVoucher;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -13,7 +13,7 @@ use App\Traits\ResponseTrait;
 
 use Illuminate\Support\Facades\Log;
 
-class ClassController extends Controller
+class FeeVoucherController extends Controller
 {
 
     /**
@@ -33,21 +33,12 @@ class ClassController extends Controller
             $perPage = isset($request['per_page']) ? intval($request['per_page']) : 10;
             $orderBy = isset($request['order_by']) ? $request['order_by'] : 'id';
             $order   = isset($request['order']) ? $request['order'] : 'desc';
-            $search   = ( isset($request['search']) && ! empty(isset($request['search'])) ) ? $request['search'] : '';
+            
+            $data = FeeVoucher::orderBy($orderBy, $order)
+                ->with('author', 'user', 'tutor', 'class')
+                ->paginate($perPage);
 
-            if( ! empty($search) ){
-                $data = ClassModel::orderBy($orderBy, $order)
-                    ->where('title', 'like', '%'.$search.'%')
-                    ->orWhere('description', 'like', '%'.$search.'%')
-                    ->with('category', 'quizzes', 'author', 'users')
-                    ->paginate($perPage);
-            }else{
-                $data = ClassModel::orderBy($orderBy, $order)
-                    ->with('category', 'quizzes', 'author', 'users')
-                    ->paginate($perPage);
-            }
-
-            return $this->responseSuccess($data, 'Class List Fetch Successfully !');
+            return $this->responseSuccess($data, 'Fee Vouchers List Fetch Successfully !');
 
         } catch (\Exception $e) {
             return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -64,39 +55,39 @@ class ClassController extends Controller
                 [
                     'title'     => 'required|string|max:50',
                     'description'     => 'nullable|max:5000',
+                    'amount'       => 'required|numeric',
+                    'due_date' => 'required|date_format:Y-m-d',
                     'status'     => 'required|string|max:10',
-                    'fee_amount'       => 'required|numeric',
+                    'payment_proof_image_url'     => 'required|string',
                     'author_id'     => 'required|numeric',
-                    'category_id'     => 'required|numeric',
+                    'user_id'     => 'required|numeric',
+                    'class_id'     => 'required|numeric',
                 ],
                 [
                     'title.required'     => 'Please provide title',
                     'title.max'          => 'Please make sure title length is upto 50 characters',
                     'description.max' => 'Please provide description maximum of 5000 characters',
+                    'amount.required'     => 'Please provide amount id',
+                    'amount.numeric'          => 'Please make sure amount is numeric value',
+                    'due_date.required'    => 'Please the due date',
+                    'due_date.date_format' => 'Please make sure your due-date is formatted as Y-m-d',
                     'status.required'     => 'Please provide status',
                     'status.max'          => 'Please make sure status length is upto 10 characters',
-                    'fee_amount.required'     => 'Please provide fee amount id',
-                    'fee_amount.numeric'          => 'Please make sure fee amount is numeric value',
+                    'payment_proof_image_url.required'         => 'Please provide the payment proof image url',
                     'author_id.required'     => 'Please provide author_id id',
                     'author_id.numeric'          => 'Please make sure author_id is numeric value',
-                    'category_id.required'     => 'Please provide category id',
-                    'category_id.numeric'          => 'Please make sure category id is numeric value',
+                    'user_id.required'     => 'Please provide user id',
+                    'user_id.numeric'          => 'Please make sure user id is numeric value',
+                    'class_id.required'     => 'Please provide class id',
+                    'class_id.numeric'          => 'Please make sure class id is numeric value',
                 ]
             ); 
 
-            $class = ClassModel::create($request_data);
+            $fee_voucher = FeeVoucher::create($request_data);
 
-            /**
-             * Set Class Users
-             */
-            // Retrieve the user IDs from the request (assuming they're in an array)
-            $users_ids = $request->input('users');
-            // Associate users with the class by inserting records into the pivot table
-            $class->users()->attach($users_ids, ['created_at' => date('Y-m-d H:i:s')]);
+            $response_data = FeeVoucher::with('author', 'user', 'tutor', 'class')->find($fee_voucher->id);
 
-            $response_data = ClassModel::with('category', 'quizzes', 'author', 'users')->find($class->id);
-
-            return $this->responseSuccess($response_data, 'New Class Created Successfully !');
+            return $this->responseSuccess($response_data, 'New Fee Voucher Created Successfully !');
 
         } catch (\Exception $exception) {
             return $this->responseError(null, $exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -109,13 +100,13 @@ class ClassController extends Controller
        
         try {
 
-            $data = ClassModel::with('category', 'quizzes', 'author', 'users')->find($id);
+            $data = FeeVoucher::with('author', 'user', 'tutor', 'class')->find($id);
 
             if (is_null($data)) {
-                return $this->responseError(null, 'Class Not Found', Response::HTTP_NOT_FOUND);
+                return $this->responseError(null, 'Fee Voucher Not Found', Response::HTTP_NOT_FOUND);
             }
 
-            return $this->responseSuccess($data, 'Class Details Fetch Successfully !');
+            return $this->responseSuccess($data, 'Fee Voucher Details Fetch Successfully !');
 
         } catch (\Exception $e) {
             return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -132,51 +123,51 @@ class ClassController extends Controller
                 [
                     'title'     => 'required|string|max:50',
                     'description'     => 'nullable|max:5000',
+                    'amount'       => 'required|numeric',
+                    'due_date' => 'required|date_format:Y-m-d',
                     'status'     => 'required|string|max:10',
-                    'fee_amount'       => 'required|numeric',
+                    'payment_proof_image_url'     => 'required|string',
                     'author_id'     => 'required|numeric',
-                    'category_id'     => 'required|numeric',
+                    'user_id'     => 'required|numeric',
+                    'class_id'     => 'required|numeric',
                 ],
                 [
                     'title.required'     => 'Please provide title',
                     'title.max'          => 'Please make sure title length is upto 50 characters',
                     'description.max' => 'Please provide description maximum of 5000 characters',
+                    'amount.required'     => 'Please provide amount id',
+                    'amount.numeric'          => 'Please make sure amount is numeric value',
+                    'due_date.required'    => 'Please the due date',
+                    'due_date.date_format' => 'Please make sure your due-date is formatted as Y-m-d',
                     'status.required'     => 'Please provide status',
                     'status.max'          => 'Please make sure status length is upto 10 characters',
-                    'fee_amount.required'     => 'Please provide fee amount id',
-                    'fee_amount.numeric'          => 'Please make sure fee amount is numeric value',
+                    'payment_proof_image_url.required'         => 'Please provide the payment proof image url',
                     'author_id.required'     => 'Please provide author_id id',
                     'author_id.numeric'          => 'Please make sure author_id is numeric value',
-                    'category_id.required'     => 'Please provide category id',
-                    'category_id.numeric'          => 'Please make sure category id is numeric value',
+                    'user_id.required'     => 'Please provide user id',
+                    'user_id.numeric'          => 'Please make sure user id is numeric value',
+                    'class_id.required'     => 'Please provide class id',
+                    'class_id.numeric'          => 'Please make sure class id is numeric value',
                 ]
-            );  
+            );
 
-            $class = ClassModel::find($id);
+            $fee_voucher = FeeVoucher::find($id);
 
-            if (is_null($class)) {
+            if (is_null($fee_voucher)) {
                 return null;
             }
 
             // If everything is OK, then update.
-            $class->update($request_data);
+            $fee_voucher->update($request_data);
 
-            /**
-             * Set Class Users
-             */
-            // Retrieve the user IDs from the request (assuming they're in an array)
-            $users_ids = $request->input('users');
-            // Associate users with the class by inserting records into the pivot table
-            $class->users()->syncWithPivotValues($users_ids, ['updated_at' => date('Y-m-d H:i:s')]);
-
-            $response_data = ClassModel::with('category', 'quizzes', 'author', 'users')->find($class->id);
+            $response_data = FeeVoucher::with('author', 'user', 'tutor', 'class')->find($fee_voucher->id);
 
             if (is_null($response_data)) {
-                return $this->responseError(null, 'Class Not Found', Response::HTTP_NOT_FOUND);
+                return $this->responseError(null, 'Fee Voucher Not Found', Response::HTTP_NOT_FOUND);
             }
 
             // Finally return the updated Class.
-            return $this->responseSuccess($response_data, 'Class Updated Successfully !');
+            return $this->responseSuccess($response_data, 'Fee Voucher Updated Successfully !');
 
         } catch (\Exception $e) {
             return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -189,19 +180,19 @@ class ClassController extends Controller
 
         try {
 
-            $class = ClassModel::find($id);
+            $fee_voucher = FeeVoucher::find($id);
 
-            if (empty($class)) {
-                return $this->responseError(null, 'Class Not Found', Response::HTTP_NOT_FOUND);
+            if (empty($fee_voucher)) {
+                return $this->responseError(null, 'Fee Voucher Not Found', Response::HTTP_NOT_FOUND);
             }
 
-            $deleted = $class->delete($class);
+            $deleted = $fee_voucher->delete($fee_voucher);
 
             if ( ! $deleted) {
-                return $this->responseError(null, 'Failed to delete the Class.', Response::HTTP_INTERNAL_SERVER_ERROR);
+                return $this->responseError(null, 'Failed to delete the Fee Voucher.', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
-            return $this->responseSuccess($class, 'Class Deleted Successfully !');
+            return $this->responseSuccess($fee_voucher, 'Fee Voucher Deleted Successfully !');
 
         } catch (\Exception $e) {
             return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
