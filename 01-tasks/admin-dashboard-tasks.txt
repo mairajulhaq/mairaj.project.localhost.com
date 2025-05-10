@@ -19,28 +19,28 @@ Note:
 Remaining UI Task:
 
 - Profile Component
--- Address Section
+-- Address Section - Done
 
 - Create Tutor Component
--- Address Section
+-- Address Section - Done
 b.	Manage tutor association into multiple categories.
 c.	Share login credentials with the tutor via email/SMS after registration.
 d.	Can view the list of the particular tutor’s registered users/students.
 
 - Edit Tutor Component
--- Address Section
+-- Address Section - Done
 b.	Manage tutor association into multiple categories.
 c.	Share login credentials with the tutor via email/SMS after registration.
 d.	Can view the list of the particular tutor’s registered users/students.
 
 - Create User Component
--- Address Section
+-- Address Section - Done
 b.	View the list of fee vouchers and can filter by status. 
 c.	Can verify uploaded fee voucher and generate new fee voucher. 
 d.	View a list of student’s hired tutors and filter by category/subject. 
 
 - Edit User Component
--- Address Section
+-- Address Section - Done
 b.	View the list of fee vouchers and can filter by status. 
 c.	Can verify uploaded fee voucher and generate new fee voucher. 
 d.	View a list of student’s hired tutors and filter by category/subject. 

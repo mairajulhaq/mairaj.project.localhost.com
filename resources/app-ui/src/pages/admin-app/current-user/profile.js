@@ -31,9 +31,11 @@ const initialValues = {
     image_url: '',
     name: '',
     email: '',
+    role: '',
     date_of_birth: '',
     mobile_no: '',
     bio_data: '',
+    address: ''
 };
 
 /**
@@ -52,9 +54,17 @@ const onFinishHandlerForm = async (userId, imageUrl, values) => {
             image_url: imageUrl,
             name: values?.name,
             email: values?.email,
+            role: 'admin',
             date_of_birth: values?.date_of_birth,
             mobile_no: values?.mobile_no,
             bio_data: values?.bio_data,
+            address: {
+                street: values?.street,
+                country: values?.country,
+                province: values?.province,
+                city: values?.city,
+                postal_code: values?.postal_code
+            }
         };
 
         return await request('/api/users/' + userId, {
@@ -173,6 +183,11 @@ const UpdateProfile = () => {
                                     date_of_birth: api_response?.data?.date_of_birth,
                                     mobile_no: api_response?.data?.mobile_no,
                                     bio_data: api_response?.data?.bio_data,
+                                    street: api_response?.data?.address?.street,
+                                    country: api_response?.data?.address?.country,
+                                    province: api_response?.data?.address?.province,
+                                    city: api_response?.data?.address?.city,
+                                    postal_code: api_response?.data?.address?.postal_code
                                 };
 
                             }).catch(function (error) {
@@ -351,6 +366,62 @@ const UpdateProfile = () => {
                                 </ProForm.Group>
                             </Col>
                         </Row>
+                    </ProCard>
+
+                    <ProCard
+                        title="Address Details"
+                        bordered
+                        headerBordered
+                        collapsible
+                        size="default"
+                        type="inner"
+                        style={{
+                            marginBlockEnd: 15,
+                            minWidth: 800,
+                            maxWidth: '100%',
+                        }}
+                    >
+                        <ProForm.Group size={24}>
+                            <ProFormText
+                                name={'street'}
+                                label="Street address"
+                                placeholder="Please Enter Street Address"
+                                rules={[{ required: true }]}
+                                colProps={{xs: 24, sm: 24, md: 24, lg: 24, xl: 24}}
+                            />
+                        </ProForm.Group>
+                        <ProForm.Group size={24}>
+                            <ProFormText
+                                name={'country'}
+                                label="Country / Region"
+                                placeholder="Please Enter Country / Region"
+                                rules={[{ required: true }]}
+                                colProps={{xs: 24, sm: 24, md: 12, lg: 12, xl: 12}}
+                            />
+                            <ProFormText
+                                name={'province'}
+                                label="Province"
+                                placeholder="Please Enter Province"
+                                rules={[{ required: true }]}
+                                colProps={{xs: 24, sm: 24, md: 12, lg: 12, xl: 12}}
+                            />
+                        </ProForm.Group>
+                        <ProForm.Group size={24}>
+                            <ProFormText
+                                name={'city'}
+                                label="City"
+                                placeholder="Please Enter City"
+                                rules={[{ required: true }]}
+                                colProps={{xs: 24, sm: 24, md: 12, lg: 12, xl: 12}}
+                            />
+                            <ProFormText
+                                name={'postal_code'}
+                                label="Postal Code / ZIP"
+                                placeholder="Please Enter Post Code / ZIP"
+                                rules={[{ required: true }]}
+                                colProps={{xs: 24, sm: 24, md: 12, lg: 12, xl: 12}}
+                            />
+                        </ProForm.Group>
                     </ProCard>
 
                 </ProForm>

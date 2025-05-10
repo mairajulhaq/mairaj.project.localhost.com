@@ -154,8 +154,7 @@ class UserController extends Controller
                 [
                     'name'     => 'required|string|max:50',
                     'role'     => 'required|string|max:50',
-                    'email'    => 'required|max:255|email|unique:users',
-                    'password' => 'required',
+                    'email'    => 'required|max:255',
                     'image_url'     => 'required|string',
                     'bio_data'     => 'nullable|max:5000',
                     'mobile_no'     => 'required|string|max:50',
@@ -173,8 +172,6 @@ class UserController extends Controller
                     'role.required'     => 'Please give your role',
                     'role.max'          => 'Please give your role between 50 characters',
                     'email.required'    => 'Please give your email',
-                    'email.unique'      => 'User already exists by this email, please try with another email.',
-                    'password.required' => 'Please give your password',
                     'image_url.required'         => 'Please give a valid user profile image',
                     'bio_data.max' => 'Please give bio description maximum of 5000 characters',
                     'mobile_no.required'     => 'Please give your mobile no',

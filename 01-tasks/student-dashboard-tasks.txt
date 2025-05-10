@@ -1,7 +1,7 @@
 Remaining UI Task:
 
 - Profile Component
--- Address Section
+-- Address Section - Done
 
 - Tutor Hiring Component
 -- can filter by categories/subjects.
