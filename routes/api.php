@@ -13,6 +13,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AttemptController;
 use App\Http\Controllers\FeeVoucherController;
+use App\Http\Controllers\FeePackageController;
 
 use App\Http\Controllers\FileManagerController;
 
@@ -84,9 +85,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('attempts', AttemptController::class);
 
     /**
-     * 
+     * Fee Voucher
      */
     Route::resource('fee-vouchers', FeeVoucherController::class);
     
+    /**
+     * Fee Packages
+     */
+    Route::resource('fee-vouchers', FeePackageController::class);
 
 });

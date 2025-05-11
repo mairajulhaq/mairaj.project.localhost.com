@@ -33,23 +33,44 @@ class FeeVoucherController extends Controller
             $perPage = isset($request['per_page']) ? intval($request['per_page']) : 10;
             $orderBy = isset($request['order_by']) ? $request['order_by'] : 'id';
             $order   = isset($request['order']) ? $request['order'] : 'desc';
-            $user_id   = ( isset($request['user_id']) && ! empty(isset($request['user_id'])) ) ? $request['user_id'] : '';
-            $class_id   = ( isset($request['class_id']) && ! empty(isset($request['class_id'])) ) ? $request['class_id'] : '';
             $status   = ( isset($request['status']) && ! empty(isset($request['status'])) ) ? $request['status'] : '';
+            $verification_status   = ( isset($request['verification_status']) && ! empty(isset($request['verification_status'])) ) ? $request['verification_status'] : '';
+            $category_id   = ( isset($request['category_id']) && ! empty(isset($request['category_id'])) ) ? $request['category_id'] : '';
+            $tutor_id   = ( isset($request['tutor_id']) && ! empty(isset($request['tutor_id'])) ) ? $request['tutor_id'] : '';
+            $fee_package_id = ( isset($request['fee_package_id']) && ! empty(isset($request['fee_package_id'])) ) ? $request['fee_package_id'] : '';
+            $user_id   = ( isset($request['user_id']) && ! empty(isset($request['user_id'])) ) ? $request['user_id'] : '';
+            $author_id   = ( isset($request['author_id']) && ! empty(isset($request['author_id'])) ) ? $request['author_id'] : '';
+            
             
             $query = FeeVoucher::orderBy($orderBy, $order)
-                ->with('author', 'user', 'tutor', 'class');
+                ->with('category', 'tutor', 'fee_package', 'user', 'author');
+
+            if (! empty($status) ) {
+                $query->where('status', $status);
+            }
+
+            if (! empty($verification_status) ) {
+                $query->where('verification_status', $verification_status);
+            }    
+
+            if (! empty($category_id) ) {
+                $query->where('category_id', $category_id);
+            }
+
+            if (! empty($tutor_id) ) {
+                $query->where('tutor_id', $tutor_id);
+            }
+
+            if (! empty($fee_package_id) ) {
+                $query->where('fee_package_id', $fee_package_id);
+            }
 
             if (! empty($user_id) ) {
                 $query->where('user_id', $user_id);
             }
 
-            if (! empty($class_id) ) {
-                $query->where('class_id', $class_id);
-            }    
-
-            if (! empty($status) ) {
-                $query->where('status', $status);
+            if (! empty($author_id) ) {
+                $query->where('author_id', $author_id);
             }
 
             // get query final result
@@ -102,7 +123,7 @@ class FeeVoucherController extends Controller
 
             $fee_voucher = FeeVoucher::create($request_data);
 
-            $response_data = FeeVoucher::with('author', 'user', 'tutor', 'class')->find($fee_voucher->id);
+            $response_data = FeeVoucher::with('category', 'tutor', 'fee_package', 'user', 'author')->find($fee_voucher->id);
 
             return $this->responseSuccess($response_data, 'New Fee Voucher Created Successfully !');
 
@@ -117,7 +138,7 @@ class FeeVoucherController extends Controller
        
         try {
 
-            $data = FeeVoucher::with('author', 'user', 'tutor', 'class')->find($id);
+            $data = FeeVoucher::with('category', 'tutor', 'fee_package', 'user', 'author')->find($id);
 
             if (is_null($data)) {
                 return $this->responseError(null, 'Fee Voucher Not Found', Response::HTTP_NOT_FOUND);
@@ -177,7 +198,7 @@ class FeeVoucherController extends Controller
             // If everything is OK, then update.
             $fee_voucher->update($request_data);
 
-            $response_data = FeeVoucher::with('author', 'user', 'tutor', 'class')->find($fee_voucher->id);
+            $response_data = FeeVoucher::with('category', 'tutor', 'fee_package', 'user', 'author')->find($fee_voucher->id);
 
             if (is_null($response_data)) {
                 return $this->responseError(null, 'Fee Voucher Not Found', Response::HTTP_NOT_FOUND);
