@@ -7,10 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Models\Qualification;
 use App\Models\Experience;
+use App\Models\ClassModel;
 
 use Illuminate\Notifications\Notifiable;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 use Laravel\Sanctum\HasApiTokens;
 
@@ -106,5 +108,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Experience::class)->orderBy('id', 'desc');
     }
+
+
+    /** 
+     * Relationship: Many to Many
+     * https://laravel.com/docs/12.x/eloquent-relationships#many-to-many
+     */
+    public function classes(): BelongsToMany
+    {
+        return $this->belongsToMany(ClassModel::class, 'class_users', 'user_id', 'class_id');
+    }
+
 
 }

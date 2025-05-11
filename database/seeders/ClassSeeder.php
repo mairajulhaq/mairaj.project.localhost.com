@@ -255,7 +255,7 @@ class ClassSeeder extends Seeder
              * take(10) gets the first 10 numbers.
              * values()->all() returns a plain PHP array.
              */
-            $random_users_ids = collect(range(5, 20))
+            $random_users_ids = collect(range(7, 25))
             ->shuffle()
             ->take(10)
             ->values()

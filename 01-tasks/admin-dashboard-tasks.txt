@@ -1,15 +1,15 @@
 Remaining Seeders:
 
-- Address
-- Categories
-- Classes
-- Quizzes
--- Questions
-- Fee Vouchers
+- Address - done
+- Categories - done
+- Classes - done
+- Quizzes - done
+-- Questions - done
+- Fee Vouchers - done
 
 Remaining APIs:
-- Address
-- Fee Vouchers
+- Address - done
+- Fee Vouchers - done
 ================================================================================
 
 Note:

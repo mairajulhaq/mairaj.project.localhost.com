@@ -35,24 +35,29 @@ class UserController extends Controller
             $order   = isset($request['order']) ? $request['order'] : 'desc';
             $role   = isset($request['role']) ? $request['role'] : 'user';
             $search   = ( isset($request['search']) && ! empty(isset($request['search'])) ) ? $request['search'] : '';
+            $category_id   = ( isset($request['category_id']) && ! empty(isset($request['category_id'])) ) ? $request['category_id'] : '';
+            
+            $query = User::orderBy($orderBy, $order)
+                ->with(['qualifications', 'experiences'])
+                ->where('role', $role);
 
-            if( ! empty($search) ){
-
-                $data = User::orderBy($orderBy, $order)
-                    ->where('role', '=', $role)
-                    ->where('name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%')
-                    ->with('qualifications')
-                    ->with('experiences')
-                    ->paginate($perPage);
-
-            }else{
-                $data = User::orderBy($orderBy, $order)
-                    ->with('qualifications')
-                    ->with('experiences')
-                    ->where('role', '=', $role)
-                    ->paginate($perPage);
+            // Add category filter if category_id is provided
+            if ($category_id) {
+                $query->whereHas('classes', function($q) use ($category_id) {
+                    $q->where('category_id', $category_id);
+                });
             }
+
+            // search by name and email if search text is provided
+            if($search){
+                $query->whereAny([
+                    'name',
+                    'email',
+                ], 'like', '%'.$search.'%');
+            }
+
+            // get query final result
+            $data = $query->paginate($perPage);
 
             return $this->responseSuccess($data, 'User List Fetch Successfully !');
 

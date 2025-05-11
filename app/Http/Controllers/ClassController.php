@@ -34,18 +34,40 @@ class ClassController extends Controller
             $orderBy = isset($request['order_by']) ? $request['order_by'] : 'id';
             $order   = isset($request['order']) ? $request['order'] : 'desc';
             $search   = ( isset($request['search']) && ! empty(isset($request['search'])) ) ? $request['search'] : '';
+            $author_id   = ( isset($request['author_id']) && ! empty(isset($request['author_id'])) ) ? $request['author_id'] : '';
+            $category_id   = ( isset($request['category_id']) && ! empty(isset($request['category_id'])) ) ? $request['category_id'] : '';
 
-            if( ! empty($search) ){
-                $data = ClassModel::orderBy($orderBy, $order)
-                    ->where('title', 'like', '%'.$search.'%')
-                    ->orWhere('description', 'like', '%'.$search.'%')
-                    ->with('category', 'quizzes', 'author', 'users')
-                    ->paginate($perPage);
-            }else{
-                $data = ClassModel::orderBy($orderBy, $order)
-                    ->with('category', 'quizzes', 'author', 'users')
-                    ->paginate($perPage);
-            }
+            $query = ClassModel::orderBy($orderBy, $order)
+                ->with('category', 'quizzes', 'author', 'users')
+                ->where('author_id', $author_id);
+
+            // // Add category filter if category_id is provided
+            // if (! empty($category_id) ) {
+            //     $query->where('category_id', $category_id);
+            // }
+
+            // // search by name and email if search text is provided
+            // if( ! empty($search) ){
+            //     $query->whereAny([
+            //         'title',
+            //         'description',
+            //     ], 'like', '%'.$search.'%');
+            // }
+
+            // if( ! empty($search) ){
+            //     $data = ClassModel::orderBy($orderBy, $order)
+            //         ->where('title', 'like', '%'.$search.'%')
+            //         ->orWhere('description', 'like', '%'.$search.'%')
+            //         ->with('category', 'quizzes', 'author', 'users')
+            //         ->paginate($perPage);
+            // }else{
+            //     $data = ClassModel::orderBy($orderBy, $order)
+            //         ->with('category', 'quizzes', 'author', 'users')
+            //         ->paginate($perPage);
+            // }
+
+            // get query final result
+            $data = $query->paginate($perPage);
 
             return $this->responseSuccess($data, 'Class List Fetch Successfully !');
 

@@ -9,8 +9,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+
 
 use Carbon\Carbon;
 
@@ -152,17 +154,22 @@ class CategorySeeder extends Seeder
         $dummyimage_bg_color = config('services.dummyimage.bg_color');
         $dummyimage_text_color = config('services.dummyimage.text_color');
 
+
+        $directory = public_path('storage/categories');
+        // Delete directory and all contents
+        File::deleteDirectory($directory);
+        // Recreate directory
+        if (!File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true);
+        }
+
         foreach ($categories as $category_data) {
             $category = Category::create($category_data);
 
             $api_image_url = 'https://dummyimage.com/600x400/'.$dummyimage_bg_color.'/'.$dummyimage_text_color.'.jpg&text='.urlencode($category->title).' - Online Classes';
             // Fetch image contents
             $contents = Http::timeout(100)->retry(3, 100)->get($api_image_url)->body();
-            // Ensure directory exists
-            $directory = public_path('storage/categories');
-            if (!file_exists($directory)) {
-                mkdir($directory, 0755, true);
-            }
+            
             // Generate filename
             $imageName = urlencode($category->title) . '.jpg';
             // Store image in /public/storage/categories/
@@ -172,21 +179,10 @@ class CategorySeeder extends Seeder
             // Update user's image_url field
             $category->update(['image_url' => asset('storage/categories/' . $imageName)]);
 
-
-             // Attach three random tutors to the category
+            // Attach three random tutors to the category
             $category->tutors()->attach([
                 rand(2, 4), // Assuming you have 3 tutors in your database
             ], ['created_at' => now(), 'updated_at' => now()]);
-
-             // Attach fifteen random users to the category
-            $category->users()->attach([
-                rand(5, 20), // Assuming you have 15 users in your database
-                rand(5, 20),
-                rand(5, 20),
-                rand(5, 20),
-                rand(5, 20),
-            ], ['created_at' => now(), 'updated_at' => now()]);
-
 
         }
 

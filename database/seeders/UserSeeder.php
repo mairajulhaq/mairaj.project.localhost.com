@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
 
 class UserSeeder extends Seeder
@@ -95,15 +96,14 @@ class UserSeeder extends Seeder
             ];
         }
 
-        /**
-         * For Single item creation
-         */
-        // User::create($data);
 
-        /**
-         * For multiple items creation
-         */
-        // User::insert($data);
+        $directory = public_path('storage/users');
+        // Delete directory and all contents
+        File::deleteDirectory($directory);
+        // Recreate directory
+        if (!File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true);
+        }
 
         foreach ($data as $userData) {
             $user = User::create($userData);

@@ -64,8 +64,8 @@ class FeeVoucher extends Model
 
 
     /** 
-     * Relationship: One to One / Has One
-     * https://laravel.com/docs/12.x/eloquent-relationships#one-to-one
+     * Relationship: Has One Through
+     * https://laravel.com/docs/12.x/eloquent-relationships#has-one-through
      */
     public function tutor(): HasOneThrough
     {
