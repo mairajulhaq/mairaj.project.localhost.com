@@ -57,29 +57,29 @@ const ListQuestions = ( { questionsTableRef, quizID, authorID } ) => {
             valueType: 'option',
             key: 'table-column-actions',
             render: (text, record, _, action) => [
+                <>
+                    <Button
+                        key="editable"
+                        onClick={() => {
+                            setEditModelData(record);
+                            setEditModelVisiblity(true);
+                        }}
+                    >
+                        <EditOutlined />
+                    </Button>,
 
-                <Button
-                    key="editable"
-                    onClick={() => {
-                        setEditModelData(record);
-                        setEditModelVisiblity(true);
-                    }}
-                >
-                    <EditOutlined />
-                </Button>,
-
-                <DeleteQuestion
-                    rowId={ record?.id }
-                    onFinish={ ( { status, text_message } ) => {
-                        if ( status ) {
-                            message.success( text_message );
-                            questionsTableRef.current?.reload();
-                        } else {
-                            message.error( text_message );
-                        }
-                    } }
-                />,
-
+                    <DeleteQuestion
+                        rowId={ record?.id }
+                        onFinish={ ( { status, text_message } ) => {
+                            if ( status ) {
+                                message.success( text_message );
+                                questionsTableRef.current?.reload();
+                            } else {
+                                message.error( text_message );
+                            }
+                        } }
+                    />,
+                </>
             ],
         },
     ];

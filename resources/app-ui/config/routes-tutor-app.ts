@@ -56,6 +56,23 @@ const RoutesTutorApp = [
     icon: 'FieldTimeOutlined',
     access: 'isTutor',
     layout: 'mix',
+    component: './tutor-app/quizzes/list-quizzes',
+  },
+  {
+    path: '/tutor-app/quizzes/new',
+    hideInMenu: true,
+    name: 'Create Quiz',
+    access: 'isTutor',
+    layout: 'mix',
+    component: './tutor-app/quizzes/create-quiz',
+  },
+  {
+    path: '/tutor-app/quizzes/edit/:id',
+    hideInMenu: true,
+    name: 'Edit Quiz',
+    access: 'isTutor',
+    layout: 'mix',
+    component: './tutor-app/quizzes/update-quiz',
   },
 /**** End - Tutor App ****/
 ];

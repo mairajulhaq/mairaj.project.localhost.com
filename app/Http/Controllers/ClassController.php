@@ -40,7 +40,6 @@ class ClassController extends Controller
             $query = ClassModel::orderBy($orderBy, $order)
                 ->with('category', 'quizzes', 'author', 'users');
 
-            // Add category filter if category_id is provided
             if (! empty($author_id) ) {
                 $query->where('author_id', $author_id);
             }

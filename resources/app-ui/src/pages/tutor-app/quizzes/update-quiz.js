@@ -9,10 +9,12 @@ import {
     ProFormSelect,
     ProFormSegmented
 } from '@ant-design/pro-components';
-import { message, Form } from 'antd';
-import React, { useEffect, useState } from "react";
+import { message, Form, Row, Col, Button } from 'antd';
+import { PlusOutlined, PercentageOutlined } from '@ant-design/icons';
+import React, { useEffect, useRef, useState } from "react";
 import { request, history } from '@umijs/max';
-import { useModel } from "@@/exports";
+import { useParams, useModel } from "@@/exports";
+import ListQuestions from './questions/list-questions';
 
 const waitTime = (time = 100) => {
     return new Promise((resolve) => {
@@ -23,11 +25,13 @@ const waitTime = (time = 100) => {
 };
 
 const initialValues = {
-    users: [
-        {
-            user: undefined, // Shows 1 empty dropdown
-        },
-    ]
+    title: '',
+    description: '',
+    status: '',
+    passing_percentage: '',
+    attempts_limit: '',
+    class_id: '',
+    users: '',
 };
 
 
@@ -47,23 +51,25 @@ const onFinishHandlerForm = async (values, authorId) => {
             title: values?.title,
             description: values?.description,
             status: values?.status,
+            passing_percentage: values?.passing_percentage,
+            attempts_limit: values?.attempts_limit,
             author_id: authorId,
             class_id: values?.class_id,
             users: values?.users?.map( ( user ) => user?.user ) || [],
         };
 
-        return await request('/api/quizzes', {
-            method: 'POST',
+        return await request('/api/quizzes/' + values?.quiz_id, {
+            method: 'PUT',
             data: request_data,
 
         }).then(async (api_response) => {
 
             /**
-             * Quiz Created then show message and redirect to listing screen
+             * Quiz Updated then show message and redirect to listing screen
              */
             if (api_response?.data?.id > 0) {
                 message.success('Submitted successfully');
-                history.push('/admin-app/quizzes/edit/' + api_response?.data?.id);
+                history.push('/tutor-app/quizzes/edit/' + api_response?.data?.id);
             }
 
         }).catch(function (error) {
@@ -80,7 +86,9 @@ const onFinishHandlerForm = async (values, authorId) => {
 };
 
 
-const CreateQuiz = () => {
+const UpdateQuiz = () => {
+
+    const params = useParams();
 
     /**
      * States of Component
@@ -89,8 +97,10 @@ const CreateQuiz = () => {
     const {initialState, loading, refresh, setInitialState} = useModel('@@initialState');
     const [authorId, setAuthorId] = useState(0);
     const [form] = Form.useForm();
+    const questionsTableRef = useRef();
     const [ allClasses, setAllClasses ] = useState( [] );
     const [ allUsers, setAllUsers ] = useState( [] );
+    const [ quizId, setQuizId ] = useState(0);
 
     /**
      * Set Quiz AuthorId who's created the quiz
@@ -98,6 +108,10 @@ const CreateQuiz = () => {
     useEffect(() => {
         setAuthorId(initialState?.currentUser?.id);
     }, []); //empty dependency array so it only runs once at render
+
+    useEffect(() => {
+        setQuizId(params.id);
+    }, []); // empty dependency array so it only runs once at render
 
     /**
      * Start - Classes Data
@@ -148,15 +162,69 @@ const CreateQuiz = () => {
     return (
         <PageContainer>
             
+                <Row gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
+                    <Col flex="auto">
+                
+                    </Col>
+                
+                    <Col flex="100px">
+                        <Button
+                            type="primary"
+                            key="new"
+                            onClick={() => {
+                                history.push('/tutor-app/quizzes/new');
+                            }}
+                            style={{marginBlockEnd: 15}}
+                        >
+                            <PlusOutlined/> New
+                        </Button>
+                    </Col>
+                </Row>
                 <ProForm
-                    onFinish={async (values) => {
-                        await waitTime(2000);
-                        await onFinishHandlerForm(values, authorId);
-                    }}
                     layout='vertical'
                     grid={true}
                     initialValues={initialValues}
                     form={form}
+                    params={ { 'quiz_id': quizId } }
+                    request={
+                                        
+                        async (params= {} ) => {
+                    
+                            if( params?.quiz_id == 0 ) {
+                                return;
+                            }
+                    
+                            await waitTime(2000);
+                    
+                            return await request('/api/quizzes/' + params?.quiz_id, {
+                                method: 'GET',
+                            }).then(async (api_response) => {
+                    
+                                return {
+                                    ...initialValues,
+                                        title: api_response?.data?.title,
+                                        description: api_response?.data?.description,
+                                        status: api_response?.data?.status,
+                                        passing_percentage: api_response?.data?.passing_percentage,
+                                        attempts_limit: api_response?.data?.attempts_limit,
+                                        class_id: api_response?.data?.class_id,
+                                        users: api_response?.data?.users?.map( ( user ) => ( {
+                                            user: user?.id
+                                        } ) ) || []
+                                };
+                    
+                            }).catch(function (error) {
+                                console.log(error);
+                            });
+                    
+                        }
+                    }
+                    onFinish={async (values) => {
+                        await waitTime(2000);
+                        values.quiz_id = quizId;
+                        values.author_id = authorId;
+                        await onFinishHandlerForm(values, authorId);
+                    }}
                     submitter={{
                         render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
                     }}
@@ -206,8 +274,27 @@ const CreateQuiz = () => {
 									'in-active': 'In-Active',
 									active: 'Active',
 								} }
-								colProps={ { xs: 24, sm: 24, md: 6, lg: 6, xl: 6 } }
+								colProps={ { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 } }
 							/>
+                            <ProFormText
+                                name={ 'passing_percentage' }
+                                label="Passing Percentage"
+                                placeholder="Type Passing Percentage"
+                                rules={ [ { required: true } ] }
+                                fieldProps={{
+                                    suffix: <PercentageOutlined />
+                                }}
+                                colProps={ { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 } }
+                            />
+                            <ProFormText
+                                name={ 'attempts_limit' }
+                                label="Attempts Limit"
+                                placeholder="Type Attempts Limit"
+                                rules={ [ { required: true } ] }
+                                colProps={ { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 } }
+                            />
+                        </ProForm.Group>
+                        <ProForm.Group size={ 24 }>
                             <ProFormSelect
                                 name={ 'class_id' }
                                 label="Classes"
@@ -216,7 +303,7 @@ const CreateQuiz = () => {
                                 debounceTime={ 300 }
                                 placeholder="Please Select a Class"
                                 rules={ [ { required: true } ] }
-                                colProps={ { xs: 24, sm: 24, md: 18, lg: 18, xl: 18 } }
+                                colProps={ { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 } }
                             />
                         </ProForm.Group>
                         
@@ -260,6 +347,12 @@ const CreateQuiz = () => {
                             </ProFormList>
                         </ProForm.Group>
                     </ProCard>
+
+                    <ListQuestions
+                        questionsTableRef={ questionsTableRef }
+                        quizID={ quizId }
+                        authorID={ authorId }
+                    />,
                     
                 </ProForm>
                 
@@ -268,4 +361,4 @@ const CreateQuiz = () => {
 
 };
 
-export default CreateQuiz;
+export default UpdateQuiz;

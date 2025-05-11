@@ -4,7 +4,7 @@ import { Button, message, Tag } from 'antd';
 import { request, history } from '@umijs/max';
 import moment from 'moment';
 import { useModel } from 'umi';
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import DeleteQuiz from './delete-quiz';
 
 export const waitTimePromise = async (time = 100) => {
@@ -30,6 +30,12 @@ const ListQuizzes = () => {
     console.log(loading);
 
     const quizzesTableRef = useRef();
+
+    const [authorId, setAuthorId] = useState(0);
+
+    useEffect(() => {
+        setAuthorId(initialState?.currentUser?.id);
+    }, []); //empty dependency array so it only runs once at render
 
     const columns = [
 
@@ -91,28 +97,28 @@ const ListQuizzes = () => {
             valueType: 'option',
             key: 'table-column-actions',
             render: (text, record, _, action) => [
+                <>
+                    <Button
+                        key="editable"
+                        onClick={() => {
+                            history.push('/tutor-app/quizzes/edit/' + record.id);
+                        }}
+                    >
+                        <EditOutlined />
+                    </Button>,
 
-                <Button
-                    key="editable"
-                    onClick={() => {
-                        history.push('/admin-app/quizzes/edit/' + record.id);
-                    }}
-                >
-                    <EditOutlined />
-                </Button>,
-
-                <DeleteQuiz
-                    rowId={ record?.id }
-                    onFinish={ ( { status, text_message } ) => {
-                        if ( status ) {
-                            message.success( text_message );
-                            quizzesTableRef.current?.reload();
-                        } else {
-                            message.error( text_message );
-                        }
-                    } }
-                />
-
+                    <DeleteQuiz
+                        rowId={ record?.id }
+                        onFinish={ ( { status, text_message } ) => {
+                            if ( status ) {
+                                message.success( text_message );
+                                quizzesTableRef.current?.reload();
+                            } else {
+                                message.error( text_message );
+                            }
+                        } }
+                    />
+                </>
             ],
         },
     ];
@@ -134,7 +140,7 @@ const ListQuizzes = () => {
                         type="primary"
                         key="new"
                         onClick={() => {
-                            history.push('/admin-app/quizzes/new');
+                            history.push('/tutor-app/quizzes/new');
                         }}
                     >
                         <PlusOutlined/> New
@@ -152,6 +158,7 @@ const ListQuizzes = () => {
                         return await request('/api/quizzes', {
 
                             params: {
+                                author_id: authorId,
                                 sort: {...sort},
                                 pagination: {...params},
                             },

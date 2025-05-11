@@ -4,7 +4,7 @@ import { Button, message, Tag } from 'antd';
 import { request, history } from '@umijs/max';
 import moment from 'moment';
 import { useModel } from 'umi';
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import DeleteClass from './delete-class';
 
 export const waitTimePromise = async (time = 100) => {
@@ -30,6 +30,12 @@ const ListClasses = () => {
     console.log(loading);
 
     const classesTableRef = useRef();
+
+    const [authorId, setAuthorId] = useState(0);
+    
+    useEffect(() => {
+        setAuthorId(initialState?.currentUser?.id);
+    }, []); //empty dependency array so it only runs once at render
 
     const columns = [
 
@@ -152,6 +158,7 @@ const ListClasses = () => {
                         return await request('/api/classes', {
 
                             params: {
+                                author_id: authorId,
                                 sort: {...sort},
                                 pagination: {...params},
                             },
