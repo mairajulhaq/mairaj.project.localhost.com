@@ -32,7 +32,7 @@ class FeeVouchersSeeder extends Seeder
                 $fee_voucher = FeeVoucher::create([
                     'title' => "Fee Voucher - user:{$user->name} - class:{$class->title}",
                     'description' => "This Fee Voucher is generated for user:{$user->name} regarding enrollment into the class:{$class->title}.",
-                    'amount' => $class->fee_amount,
+                    'amount' => 200,
                     'due_date' => fake()->dateTimeBetween('now', '+30 days', 'Asia/Karachi')->format('Y-m-d'),
                     'status' => 'unpaid',
                     'payment_proof_image_url' => '',
