@@ -97,6 +97,15 @@ const RoutesAdminiApp = [
     icon: 'FileProtectOutlined',
     access: 'isAdministrator',
     layout: 'mix',
+    component: './admin-app/fee-vouchers-management/list-fee-vouchers',
+  },
+  {
+    path: '/admin-app/fee-vouchers/new',
+    hideInMenu: true,
+    name: 'Create Fee Voucher',
+    access: 'isAdministrator',
+    layout: 'mix',
+    component: './admin-app/fee-vouchers-management/create-fee-voucher',
   },
   /**** Start - Admin App ****/
 ];

@@ -25,6 +25,7 @@ const RoutesTutorApp = [
     icon: 'TeamOutlined',
     access: 'isTutor',
     layout: 'mix',
+    component: './tutor-app/students/list-students',
   },
   {
     path: '/tutor-app/classes',

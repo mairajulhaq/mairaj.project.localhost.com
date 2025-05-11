@@ -2,82 +2,7 @@ import { ProCard, ProForm, ProFormText, ModalForm, ProFormTextArea, ProTable } f
 import { Row, Col, Image } from 'antd';
 import { request } from '@umijs/max';
 
-const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime } ) => {
-
-    const qualificationColumns = [
-        
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'table-column-id',
-            hideInSearch: true,
-            sorter: true,
-            defaultSortOrder: 'descend',
-        },
-        {
-            title: "University/Institution",
-            dataIndex: 'institute',
-            key: 'table-column-university-institution',
-            hideInSearch: true,
-        },
-        {
-            title: "Degree",
-            dataIndex: 'degree',
-            key: 'table-column-degree',
-            hideInSearch: true,
-        },
-        {
-            title: "Board",
-            dataIndex: 'board',
-            key: 'table-column-board',
-            hideInSearch: true,
-        },
-        {
-            title: "Year of Completion",
-            dataIndex: 'completion_date',
-            key: 'table-column-completion_date',
-            hideInForm: true,
-            hideInSearch: true,
-        },
-    ];
-
-    const experienceColumns = [
-    
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'table-column-id',
-            hideInSearch: true,
-            sorter: true,
-            defaultSortOrder: 'descend',
-        },
-        {
-            title: "Job Title",
-            dataIndex: 'title',
-            key: 'table-column-job-title',
-            hideInSearch: true,
-        },
-        {
-            title: "Institution/Organization",
-            dataIndex: 'organization',
-            key: 'table-column-institution-organization',
-            hideInSearch: true,
-        },
-        {
-            title: "Start Date",
-            dataIndex: 'start_date',
-            key: 'table-column-start-date',
-            hideInForm: true,
-            hideInSearch: true,
-        },
-        {
-            title: "End Date",
-            dataIndex: 'end_date',
-            key: 'table-column-end-date',
-            hideInForm: true,
-            hideInSearch: true,
-        },
-    ];
+const ViewStudent = ( { visible, onVisiblityChange, viewModelData } ) => {
 
 	return (
 		<ModalForm
@@ -113,7 +38,7 @@ const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime 
             preserve={false}
             submitTimeout={2000}
             onFinish={async (values) => {
-              await waitTime(2000);
+            //   await waitTime(2000);
 
 
               /**
@@ -276,81 +201,7 @@ const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime 
                     </ProForm.Group>
                 </ProCard>
 
-                <ProCard
-                    title="Qualification Details"
-                    bordered
-                    headerBordered
-                    size="default"
-                    type="inner"
-                    style={{
-                        marginBlockEnd: 15,
-                        minWidth: 800,
-                        maxWidth: '100%',
-                    }}
-                >
-
-                    <ProTable
-                        // actionRef={qualificationsTableRef}
-                        rowKey="id"
-                        search={false}
-                        options={false}
-                        pagination={{
-                            defaultPageSize: 10,
-                            showSizeChanger: true,
-                            pageSizeOptions: [10, 20, 50, 100],
-                            onChange: (page) => console.log(page),
-                        }}
-                        request={
-                            async (params = {}, sort, filter, paginate) => {
-                                /**
-                                 * Delay the API request
-                                 */
-                                await waitTime(2000);
-                            }
-                        }
-                        dataSource={viewModelData?.qualifications?.length ? viewModelData.qualifications : []}
-                        columns={qualificationColumns}
-                    />
-                        
-                </ProCard>
-                <ProCard
-                    title="Experience Details"
-                    bordered
-                    headerBordered
-                    size="default"
-                    type="inner"
-                    style={{
-                        marginBlockEnd: 15,
-                        minWidth: 800,
-                        maxWidth: '100%',
-                    }}
-                >
-                    
-                    <ProTable
-                        // actionRef={experiencesTableRef}
-                        rowKey="id"
-                        search={false}
-                        options={false}
-                        pagination={{
-                            defaultPageSize: 10,
-                            showSizeChanger: true,
-                            pageSizeOptions: [10, 20, 50, 100],
-                            onChange: (page) => console.log(page),
-                        }}
-                        request={
-                            async (params = {}, sort, filter, paginate) => {
-                                /**
-                                 * Delay the API request
-                                 */
-                                await waitTime(2000);
-                            }
-                        }
-                        dataSource={viewModelData?.experiences?.length ? viewModelData.experiences : []}
-                        columns={experienceColumns}
-                    />
-                </ProCard>
-
         </ModalForm>
 	);
 };
-export default ViewTutorHiring;
+export default ViewStudent;
