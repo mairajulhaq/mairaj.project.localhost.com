@@ -75,7 +75,7 @@ class ClassController extends Controller
                     'description.max' => 'Please provide description maximum of 5000 characters',
                     'status.required'     => 'Please provide status',
                     'status.max'          => 'Please make sure status length is upto 10 characters',
-                    'fee_amount.required'     => 'Please provide fee amount id',
+                    'fee_amount.required'     => 'Please provide fee amount',
                     'fee_amount.numeric'          => 'Please make sure fee amount is numeric value',
                     'author_id.required'     => 'Please provide author_id id',
                     'author_id.numeric'          => 'Please make sure author_id is numeric value',

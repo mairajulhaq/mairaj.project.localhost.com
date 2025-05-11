@@ -91,28 +91,28 @@ const ListClasses = () => {
             valueType: 'option',
             key: 'table-column-actions',
             render: (text, record, _, action) => [
+                <>
+                    <Button
+                        key="editable"
+                        onClick={() => {
+                            history.push('/tutor-app/classes/edit/' + record.id);
+                        }}
+                    >
+                        <EditOutlined />
+                    </Button>,
 
-                <Button
-                    key="editable"
-                    onClick={() => {
-                        history.push('/admin-app/classes/edit/' + record.id);
-                    }}
-                >
-                    <EditOutlined />
-                </Button>,
-
-                <DeleteClass
-                    rowId={ record?.id }
-                    onFinish={ ( { status, text_message } ) => {
-                        if ( status ) {
-                            message.success( text_message );
-                            classesTableRef.current?.reload();
-                        } else {
-                            message.error( text_message );
-                        }
-                    } }
-                />
-
+                    <DeleteClass
+                        rowId={ record?.id }
+                        onFinish={ ( { status, text_message } ) => {
+                            if ( status ) {
+                                message.success( text_message );
+                                classesTableRef.current?.reload();
+                            } else {
+                                message.error( text_message );
+                            }
+                        } }
+                    />
+                </>
             ],
         },
     ];
@@ -134,7 +134,7 @@ const ListClasses = () => {
                         type="primary"
                         key="new"
                         onClick={() => {
-                            history.push('/admin-app/classes/new');
+                            history.push('/tutor-app/classes/new');
                         }}
                     >
                         <PlusOutlined/> New

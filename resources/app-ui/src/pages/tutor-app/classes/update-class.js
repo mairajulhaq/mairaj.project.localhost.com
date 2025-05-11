@@ -64,7 +64,7 @@ const onFinishHandlerForm = async (values, authorId) => {
              */
             if (api_response?.data?.id > 0) {
                 message.success('Submitted successfully');
-                history.push('/admin-app/classes/edit/' + api_response?.data?.id);
+                history.push('/tutor-app/classes/edit/' + api_response?.data?.id);
             }
 
         }).catch(function (error) {
@@ -166,7 +166,7 @@ const UpdateClass = () => {
                             type="primary"
                             key="new"
                             onClick={() => {
-                                history.push('/admin-app/classes/new');
+                                history.push('/tutor-app/classes/new');
                             }}
                             style={{marginBlockEnd: 15}}
                         >

@@ -32,6 +32,23 @@ const RoutesTutorApp = [
     icon: 'SolutionOutlined',
     access: 'isTutor',
     layout: 'mix',
+    component: './tutor-app/classes/list-classes',
+  },
+  {
+    path: '/tutor-app/classes/new',
+    hideInMenu: true,
+    name: 'Create Class',
+    access: 'isTutor',
+    layout: 'mix',
+    component: './tutor-app/classes/create-class',
+  },
+  {
+    path: '/tutor-app/classes/edit/:id',
+    hideInMenu: true,
+    name: 'Edit Class',
+    access: 'isTutor',
+    layout: 'mix',
+    component: './tutor-app/classes/update-class',
   },
   {
     path: '/tutor-app/quizzes',
