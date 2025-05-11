@@ -34,15 +34,29 @@ class QuestionController extends Controller
             $orderBy = isset($request['order_by']) ? $request['order_by'] : 'id';
             $order   = isset($request['order']) ? $request['order'] : 'desc';
             $search   = ( isset($request['search']) && ! empty(isset($request['search'])) ) ? $request['search'] : '';
+            $author_id   = ( isset($request['author_id']) && ! empty(isset($request['author_id'])) ) ? $request['author_id'] : '';
+            $quiz_id   = ( isset($request['quiz_id']) && ! empty(isset($request['quiz_id'])) ) ? $request['quiz_id'] : '';
 
-            if( ! empty($search) ){
-                $data = Question::orderBy($orderBy, $order)
-                    ->where('title', 'like', '%'.$search.'%')
-                    ->paginate($perPage);
-            }else{
-                $data = Question::orderBy($orderBy, $order)
-                    ->paginate($perPage);
+            $query = Question::orderBy($orderBy, $order);
+
+            // Add category filter if category_id is provided
+            if (! empty($author_id) ) {
+                $query->where('author_id', $author_id);
             }
+
+            if (! empty($quiz_id) ) {
+                $query->where('quiz_id', $quiz_id);
+            }
+
+            // / search by name and email if search text is provided
+            if( ! empty($search) ){
+                $query->whereAny([
+                    'title',
+                ], 'like', '%'.$search.'%');
+            }    
+
+            // get query final result
+            $data = $query->paginate($perPage);
 
             return $this->responseSuccess($data, 'Question List Fetch Successfully !');
 

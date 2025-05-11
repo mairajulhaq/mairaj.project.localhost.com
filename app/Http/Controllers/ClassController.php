@@ -38,33 +38,25 @@ class ClassController extends Controller
             $category_id   = ( isset($request['category_id']) && ! empty(isset($request['category_id'])) ) ? $request['category_id'] : '';
 
             $query = ClassModel::orderBy($orderBy, $order)
-                ->with('category', 'quizzes', 'author', 'users')
-                ->where('author_id', $author_id);
+                ->with('category', 'quizzes', 'author', 'users');
 
-            // // Add category filter if category_id is provided
-            // if (! empty($category_id) ) {
-            //     $query->where('category_id', $category_id);
-            // }
+            // Add category filter if category_id is provided
+            if (! empty($author_id) ) {
+                $query->where('author_id', $author_id);
+            }
 
-            // // search by name and email if search text is provided
-            // if( ! empty($search) ){
-            //     $query->whereAny([
-            //         'title',
-            //         'description',
-            //     ], 'like', '%'.$search.'%');
-            // }
+            // Add category filter if category_id is provided
+            if (! empty($category_id) ) {
+                $query->where('category_id', $category_id);
+            }
 
-            // if( ! empty($search) ){
-            //     $data = ClassModel::orderBy($orderBy, $order)
-            //         ->where('title', 'like', '%'.$search.'%')
-            //         ->orWhere('description', 'like', '%'.$search.'%')
-            //         ->with('category', 'quizzes', 'author', 'users')
-            //         ->paginate($perPage);
-            // }else{
-            //     $data = ClassModel::orderBy($orderBy, $order)
-            //         ->with('category', 'quizzes', 'author', 'users')
-            //         ->paginate($perPage);
-            // }
+            // search by name and email if search text is provided
+            if( ! empty($search) ){
+                $query->whereAny([
+                    'title',
+                    'description',
+                ], 'like', '%'.$search.'%');
+            }
 
             // get query final result
             $data = $query->paginate($perPage);
@@ -97,7 +89,7 @@ class ClassController extends Controller
                     'description.max' => 'Please provide description maximum of 5000 characters',
                     'status.required'     => 'Please provide status',
                     'status.max'          => 'Please make sure status length is upto 10 characters',
-                    'fee_amount.required'     => 'Please provide fee amount',
+                    'fee_amount.required'     => 'Please provide fee amount id',
                     'fee_amount.numeric'          => 'Please make sure fee amount is numeric value',
                     'author_id.required'     => 'Please provide author_id id',
                     'author_id.numeric'          => 'Please make sure author_id is numeric value',

@@ -33,10 +33,27 @@ class FeeVoucherController extends Controller
             $perPage = isset($request['per_page']) ? intval($request['per_page']) : 10;
             $orderBy = isset($request['order_by']) ? $request['order_by'] : 'id';
             $order   = isset($request['order']) ? $request['order'] : 'desc';
+            $user_id   = ( isset($request['user_id']) && ! empty(isset($request['user_id'])) ) ? $request['user_id'] : '';
+            $class_id   = ( isset($request['class_id']) && ! empty(isset($request['class_id'])) ) ? $request['class_id'] : '';
+            $status   = ( isset($request['status']) && ! empty(isset($request['status'])) ) ? $request['status'] : '';
             
-            $data = FeeVoucher::orderBy($orderBy, $order)
-                ->with('author', 'user', 'tutor', 'class')
-                ->paginate($perPage);
+            $query = FeeVoucher::orderBy($orderBy, $order)
+                ->with('author', 'user', 'tutor', 'class');
+
+            if (! empty($user_id) ) {
+                $query->where('user_id', $user_id);
+            }
+
+            if (! empty($class_id) ) {
+                $query->where('class_id', $class_id);
+            }    
+
+            if (! empty($status) ) {
+                $query->where('status', $status);
+            }
+
+            // get query final result
+            $data = $query->paginate($perPage);    
 
             return $this->responseSuccess($data, 'Fee Vouchers List Fetch Successfully !');
 

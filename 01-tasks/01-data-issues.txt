@@ -35,3 +35,51 @@ php artisan migrate:fresh --seed --seeder=QuizSeeder
 ======= Admin - Dashboard - UI Changes =========
 
 We will remove 'questions mangement' sidebar menu because our questions are quiz related so they will only managed from quiz screen.
+
+#############################
+
+fee_vouchers table should hae following
+category_id
+tutor_id
+fee_package_id
+verification_status = 'pending|verified'
+
+----
+Tutor Fee:
+----------
+
+fee_packages: Table
+id
+title
+description
+tutor_id
+category_id
+fee_amount
+service_charges_amount
+created_at
+updated_at
+
+------ 
+
+---- custom apis ---
+/fee-packages - recourse controller api
+/tutors/:category_id/
+/hired-tutors/:user_id/
+/enrolled-categories/:user_id
+
+--- Fee Mangement ----
+
+--- Tutor - App -----
+We will create fee_manaement table and api and show 'Fee Packages' menu in the tutor dashboard
+tutor will be able to create, update, delete his own 'fee packages' in each category which is 
+associated by the admin.
+tutor will be abel to create multiple 'fee packages' in each category.
+
+--- User - App ----
+when user will search 
+
+-> search tutor in the 'all' or 'seelcted category' tab
+-> system will show the search
+
+--- Hiring Work Flow -----
+

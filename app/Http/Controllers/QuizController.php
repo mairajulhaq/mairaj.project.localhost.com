@@ -34,18 +34,32 @@ class QuizController extends Controller
             $orderBy = isset($request['order_by']) ? $request['order_by'] : 'id';
             $order   = isset($request['order']) ? $request['order'] : 'desc';
             $search   = ( isset($request['search']) && ! empty(isset($request['search'])) ) ? $request['search'] : '';
+            $author_id   = ( isset($request['author_id']) && ! empty(isset($request['author_id'])) ) ? $request['author_id'] : '';
+            $class_id   = ( isset($request['class_id']) && ! empty(isset($request['class_id'])) ) ? $request['class_id'] : '';
 
-            if( ! empty($search) ){
-                $data = Quiz::orderBy($orderBy, $order)
-                    ->where('title', 'like', '%'.$search.'%')
-                    ->orWhere('description', 'like', '%'.$search.'%')
-                    ->with('class', 'questions', 'author', 'users', 'attempts')
-                    ->paginate($perPage);
-            }else{
-                $data = Quiz::orderBy($orderBy, $order)
-                    ->with('class', 'questions', 'author', 'users', 'attempts')
-                    ->paginate($perPage);
+            $query = Quiz::orderBy($orderBy, $order)
+                    ->with('class', 'questions', 'author', 'users', 'attempts');
+
+            // Add category filter if category_id is provided
+            if (! empty($author_id) ) {
+                $query->where('author_id', $author_id);
             }
+
+            // Add category filter if category_id is provided
+            if (! empty($class_id) ) {
+                $query->where('class_id', $class_id);
+            }
+
+            // / search by name and email if search text is provided
+            if( ! empty($search) ){
+                $query->whereAny([
+                    'title',
+                    'description',
+                ], 'like', '%'.$search.'%');
+            }
+
+            // get query final result
+            $data = $query->paginate($perPage);
 
             return $this->responseSuccess($data, 'Quiz List Fetch Successfully !');
 
