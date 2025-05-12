@@ -8,10 +8,11 @@ import {
     ProFormList,
     ProFormSelect,
     ProFormSegmented,
+    ProFormDatePicker,
     ProFormUploadDragger
 } from '@ant-design/pro-components';
 import { message, Form } from 'antd';
-import { PercentageOutlined } from '@ant-design/icons';
+import { DollarOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from "react";
 import { request, history } from '@umijs/max';
 import { useModel } from "@@/exports";
@@ -49,7 +50,7 @@ const onFinishHandlerForm = async (values, authorId) => {
             title: values?.title,
             description: values?.description,
             amount: values?.amount,
-            due_date: values?.due_date,
+            due_date: moment(new Date(values?.due_date)).format('Y-M-D'),
             status: values?.status,
             payment_proof_image_url: values?.payment_proof_image_url,
             author_id: authorId,
@@ -209,9 +210,15 @@ const CreateFeeVoucher = () => {
                                 placeholder="Type Amount"
                                 rules={ [ { required: true } ] }
                                 fieldProps={{
-                                    suffix: <PercentageOutlined />
+                                    suffix: <DollarOutlined />
                                 }}
                                 colProps={ { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 } }
+                            />
+                            <ProFormDatePicker
+                                name={ 'due_date' }
+                                label="Due Date"
+                                rules={ [ { required: true } ] }
+                                colProps={{xs: 24, sm: 24, md: 8, lg: 8, xl: 8}}
                             />
                             <ProFormSegmented
 								name={ 'status' }
@@ -223,15 +230,8 @@ const CreateFeeVoucher = () => {
 								} }
 								colProps={ { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 } }
 							/>
-                            <ProFormText
-                                name={ 'attempts_limit' }
-                                label="Attempts Limit"
-                                placeholder="Type Attempts Limit"
-                                rules={ [ { required: true } ] }
-                                colProps={ { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 } }
-                            />
                         </ProForm.Group>
-                        <ProForm.Group size={ 24 }>
+                        {/* <ProForm.Group size={ 24 }>
                             <ProFormSelect
                                 name={ 'class_id' }
                                 label="Classes"
@@ -242,7 +242,7 @@ const CreateFeeVoucher = () => {
                                 rules={ [ { required: true } ] }
                                 colProps={ { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 } }
                             />
-                        </ProForm.Group>
+                        </ProForm.Group> */}
                         <ProForm.Group size={ 24 }>
                             <ProFormUploadDragger
                                 name={ 'paymen_proof_image_url' }
@@ -264,7 +264,7 @@ const CreateFeeVoucher = () => {
                         
                     </ProCard>
 
-                    <ProCard
+                    {/* <ProCard
                         title="Assign Users"
                         bordered
                         headerBordered
@@ -301,7 +301,7 @@ const CreateFeeVoucher = () => {
                                 </ProForm.Group>
                             </ProFormList>
                         </ProForm.Group>
-                    </ProCard>
+                    </ProCard> */}
                     
                 </ProForm>
                 

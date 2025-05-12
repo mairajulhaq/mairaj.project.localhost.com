@@ -112,7 +112,7 @@ class FeeVoucherController extends Controller
                     'status.required'     => 'Please provide status',
                     'status.max'          => 'Please make sure status length is upto 10 characters',
                     'payment_proof_image_url.required'         => 'Please provide the payment proof image url',
-                    'author_id.required'     => 'Please provide author_id id',
+                    'author_id.required'     => 'Please provide author id',
                     'author_id.numeric'          => 'Please make sure author_id is numeric value',
                     'user_id.required'     => 'Please provide user id',
                     'user_id.numeric'          => 'Please make sure user id is numeric value',
