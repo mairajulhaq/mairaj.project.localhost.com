@@ -181,7 +181,7 @@ class CategorySeeder extends Seeder
 
             // Attach three random tutors to the category
             $category->tutors()->attach([
-                rand(2, 4), // Assuming you have 3 tutors in your database
+                rand(2, 6), // Assuming you have 3 tutors in your database
             ], ['created_at' => now(), 'updated_at' => now()]);
 
         }

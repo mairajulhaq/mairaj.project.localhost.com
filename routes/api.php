@@ -92,6 +92,6 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * Fee Packages
      */
-    Route::resource('fee-vouchers', FeePackageController::class);
+    Route::resource('fee-packages', FeePackageController::class);
 
 });

@@ -1,9 +1,9 @@
 import { EyeOutlined, SearchOutlined, ReadOutlined, BankOutlined, MailOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
-import { Button, Col, Row, Input, Card, Tooltip } from 'antd';
+import { Button, Col, Row, Input, Card, Tooltip, Radio } from 'antd';
 import { request } from '@umijs/max';
 import { useModel } from 'umi';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ViewTutorHiring from './view-tutor-hiring';
 
 import { truncateText } from "../../../components/Helpers/TextHelpers";
@@ -22,6 +22,12 @@ export const waitTime = async (time = 100) => {
 
 const { Meta } = Card;
 
+const options = [
+    { label: 'Apple', value: 'Apple' },
+    { label: 'Pear', value: 'Pear' },
+    { label: 'Orange', value: 'Orange' },
+  ];
+
 const ListTutorsHiring = () => {
 
     const {initialState, loading, refresh, setInitialState} = useModel('@@initialState');
@@ -35,6 +41,40 @@ const ListTutorsHiring = () => {
     const [ searchKeywords, setSearchKeywords ] = useState('');
     const [ viewModelVisiblity, setViewModelVisiblity ] = useState( false );
     const [ viewModelData, setViewModelData ] = useState( {} );
+    const [ allCategories, setAllCategories ] = useState( [] );
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+
+
+
+    /**
+     * Start - Categories Data
+     */
+    useEffect( () => {
+        return request('/api/categories', {
+        
+        }).then( ( api_response ) => {
+            const table_data = api_response.data.data.map( ( item, i ) => ( {
+                value: item?.id,
+                label: item?.title,
+            } ) );
+        
+            setAllCategories( table_data );
+
+            console.log('table_data');
+            console.log(table_data);
+        
+            return table_data;
+        } );
+    }, [] );
+
+    /**
+     * Start - Set Selected Category ID
+     */
+    useEffect(() => {
+        if (allCategories.length > 0 && selectedCategoryId === null) {
+          setSelectedCategoryId(allCategories[0].value);
+        }
+    }, [allCategories]);
 
     return (
         <div>
@@ -50,21 +90,35 @@ const ListTutorsHiring = () => {
                 <Row justify={"center"}>
                     <Col xs={20} sm={20} md={20} lg={20} xl={20}>
                         <div className="tutors-grid-filters" style={{marginBlockEnd: "20px"}}>
-                        <div className="tutor-search-field">
-                            <Input
-                                size="large"
-                                placeholder="Search by Name or Email of Tutors"
-                                prefix={<SearchOutlined />}
-                                onChange={(e) => {
-                                    console.log('test search input');
-                                    console.log(e.target.value);
-                                    setSearchKeywords(e.target.value);
-                                }}
-                            />
-                        </div>
+                            <div className="tutor-search-field">
+                                <Input
+                                    size="large"
+                                    placeholder="Search by Name or Email of Tutors"
+                                    prefix={<SearchOutlined />}
+                                    style={{marginBlockEnd: "20px"}}
+                                    onChange={(e) => {
+                                        console.log('test search input');
+                                        console.log(e.target.value);
+                                        setSearchKeywords(e.target.value);
+                                    }}
+                                />
+                                <Radio.Group
+                                    options={allCategories}
+                                    onChange={(e) => {
+                                        console.log('e.target.value');
+                                        console.log(e.target.value);
+                                        setSelectedCategoryId(e.target.value);
+                                    }}
+                                    value={selectedCategoryId} // Default Selected Value
+                                    optionType="button"
+                                    buttonStyle="solid"
+                                />
+                            </div>
                         </div>
                     </Col>
                 </Row>
+
+                
             </div>
 
             <ProList
@@ -79,7 +133,8 @@ const ListTutorsHiring = () => {
                     prefixCls: "tutors-grid",
                 }}
                 params={{
-                    searchInput: searchKeywords
+                    searchInput: searchKeywords,
+                    selected_category_id: selectedCategoryId
                 }}
                 request={async (params, sort, filter) => {
 
@@ -106,7 +161,8 @@ const ListTutorsHiring = () => {
                             sort: {...sort},
                             pagination: {...params},
                             role: 'tutor',
-                            search: params?.searchInput
+                            search: params?.searchInput,
+                            category_id: params?.selected_category_id,
                         },
                     }).then(async (api_response) => {
                         return {
@@ -183,6 +239,7 @@ const ListTutorsHiring = () => {
                 } }
                 viewModelData={ viewModelData }
                 waitTime={ waitTime }
+                categoryId={ selectedCategoryId }
             />
 
     </div>
