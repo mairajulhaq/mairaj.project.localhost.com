@@ -213,37 +213,6 @@ class ClassSeeder extends Seeder
 
         foreach ($classes as $class_data) {
             $class = ClassModel::create($class_data);
-
-             // Attach fifteen random users to the category
-            // $class->users()->attach([
-            //     rand(5, 20), // Assuming you have 15 users in your database
-            //     rand(5, 20),
-            //     rand(5, 20),
-            //     rand(5, 20),
-            //     rand(5, 20),
-            //     rand(5, 20),
-            //     rand(5, 20),
-            //     rand(5, 20),
-            //     rand(5, 20),
-            //     rand(5, 20),
-            // ], ['created_at' => now(), 'updated_at' => now()]);
-
-
-            /**
-             * range(1, 100) creates an array from 1 to 100.
-             * shuffle() randomizes the order.
-             * take(10) gets the first 10 numbers.
-             * values()->all() returns a plain PHP array.
-             */
-            $random_users_ids = collect(range(7, 25))
-            ->shuffle()
-            ->take(10)
-            ->values()
-            ->all();
-
-            $class->users()->attach( $random_users_ids, ['created_at' => now(), 'updated_at' => now()]);
-
-
         }
 
     }

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Qualification;
 use App\Models\Experience;
 use App\Models\ClassModel;
+use App\Models\Category;
 
 use Illuminate\Notifications\Notifiable;
 
@@ -109,6 +110,14 @@ class User extends Authenticatable
         return $this->hasMany(Experience::class)->orderBy('id', 'desc');
     }
 
+    /** 
+     * Relationship: Many to Many
+     * https://laravel.com/docs/12.x/eloquent-relationships#many-to-many
+     */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'category_users', 'user_id', 'category_id');
+    }
 
     /** 
      * Relationship: Many to Many

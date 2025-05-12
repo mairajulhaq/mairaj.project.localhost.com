@@ -33,6 +33,16 @@ return new class extends Migration
             $table->foreign('tutor_id')->references('id')->on('users')->onDelete('cascade');
         });
 
+        Schema::create('category_users', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('category_id')->comment('Category ID');
+            $table->unsignedBigInteger('user_id')->comment('User ID');
+            $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+
     }
 
     /**
@@ -41,6 +51,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('category_tutors');
+        Schema::dropIfExists('category_users');
         Schema::dropIfExists('categories');
     }
 };
