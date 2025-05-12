@@ -180,9 +180,22 @@ class CategorySeeder extends Seeder
             $category->update(['image_url' => asset('storage/categories/' . $imageName)]);
 
             // Attach three random tutors to the category
-            $category->tutors()->attach([
-                rand(2, 6), // Assuming you have 3 tutors in your database
-            ], ['created_at' => now(), 'updated_at' => now()]);
+            $random_tutors_ids = collect(range(2, 6))
+            ->shuffle()
+            ->take(3)
+            ->values()
+            ->all();
+            $category->tutors()->attach($random_tutors_ids, ['created_at' => now(), 'updated_at' => now()]);
+
+
+            $random_users_ids = collect(range(7, 25))
+            ->shuffle()
+            ->take(10)
+            ->values()
+            ->all();
+
+            // Attach three random tutors to the category
+            $category->users()->attach($random_users_ids, ['created_at' => now(), 'updated_at' => now()]);
 
         }
 

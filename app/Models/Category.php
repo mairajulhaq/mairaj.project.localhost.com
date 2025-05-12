@@ -38,6 +38,15 @@ class Category extends Model
     }
 
     /** 
+     * Relationship: Many to Many
+     * https://laravel.com/docs/12.x/eloquent-relationships#many-to-many
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'category_users', 'category_id', 'user_id');
+    }
+
+    /** 
      * Relationship: One to Many / Has Many
      * https://laravel.com/docs/12.x/eloquent-relationships#one-to-many
      */
