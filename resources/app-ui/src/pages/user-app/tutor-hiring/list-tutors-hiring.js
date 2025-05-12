@@ -22,12 +22,6 @@ export const waitTime = async (time = 100) => {
 
 const { Meta } = Card;
 
-const options = [
-    { label: 'Apple', value: 'Apple' },
-    { label: 'Pear', value: 'Pear' },
-    { label: 'Orange', value: 'Orange' },
-  ];
-
 const ListTutorsHiring = () => {
 
     const {initialState, loading, refresh, setInitialState} = useModel('@@initialState');
@@ -43,7 +37,14 @@ const ListTutorsHiring = () => {
     const [ viewModelData, setViewModelData ] = useState( {} );
     const [ allCategories, setAllCategories ] = useState( [] );
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [userData, setUserData] = useState(0);
 
+    /**
+     * Update the userData State individually whenever the related State/Params is updated/effected
+     */
+    useEffect(() => {
+        setUserData(initialState?.currentUser);
+    }, []); //empty dependency array so it only runs once at render
 
 
     /**
@@ -240,6 +241,7 @@ const ListTutorsHiring = () => {
                 viewModelData={ viewModelData }
                 waitTime={ waitTime }
                 categoryId={ selectedCategoryId }
+                userData={ userData }
             />
 
     </div>

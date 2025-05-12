@@ -6,7 +6,7 @@ import moment from 'moment';
 import { useRef } from "react";
 import GenerateFeeVoucher from './generate-fee-voucher';
 
-const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime, categoryId } ) => {
+const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime, categoryId, userData } ) => {
 
     const feePackagesTableRef = useRef();
 
@@ -157,6 +157,8 @@ const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime,
                                 message.error( text_message );
                             }
                         } }
+                        userData={ userData }
+                        categoryId={ categoryId }
                     />
                 </>
             ],
