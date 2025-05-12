@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Category;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -42,10 +43,18 @@ class UserController extends Controller
                 ->where('role', $role);
 
             // Add category filter if category_id is provided
-            if ($category_id) {
-                $query->whereHas('classes', function($q) use ($category_id) {
-                    $q->where('category_id', $category_id);
-                });
+            // if ($category_id) {
+            //     $query->whereHas('classes', function($q) use ($category_id) {
+            //         $q->where('category_id', $category_id);
+            //     });
+            // }
+
+            /**
+             * Get Specific Category Tutors
+             */
+            if( $role == 'tutor' && ! empty($category_id) ){
+                $tutor_ids = Category::find($category_id)->tutors()->pluck('users.id')->toArray();
+                $query->whereIn('id', $tutor_ids);
             }
 
             // search by name and email if search text is provided
