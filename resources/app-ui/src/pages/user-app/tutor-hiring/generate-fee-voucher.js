@@ -1,30 +1,26 @@
 import { Button, Popconfirm } from 'antd';
 import { QuestionCircleOutlined, FileProtectOutlined } from '@ant-design/icons';
 import { request } from '@umijs/max';
+import moment from 'moment';
 import { useEffect, useState } from "react";
 
-const GenerateFeeVoucher = ( { rowId, onFinish, userData, categoryId } ) => {
+const GenerateFeeVoucher = ( { rowId, onFinish, userData, categoryId, tutorData, feeAmount, serviceCharges } ) => {
 
 	const [ categoryTitle, setCategoryTitle ] = useState( [] );
 
 	/**
-     * Start - Category Data
+     * Start - Category Title
      */
     useEffect( () => {
-        return request('/api/categories' + categoryId, {
+        return request('/api/categories/' + categoryId, {
 			method: 'GET',
         }).then( ( api_response ) => {
-            // const table_data = api_response.data.data.map( ( item, i ) => ( {
-            //     value: item?.id,
-            //     label: item?.title,
-            // } ) );
         
             setCategoryTitle( api_response?.data?.title );
 
-            // console.log('table_data');
-            // console.log(table_data);
+            console.log('api_response');
+            console.log(api_response);
         
-            // return table_data;
         } );
     }, [] );
 
@@ -37,36 +33,43 @@ const GenerateFeeVoucher = ( { rowId, onFinish, userData, categoryId } ) => {
 			onConfirm={ async () => {
 
 				const request_data = {
-					title: 'Fee Voucher - user:' + userData?.name + '- Category:' + categoryTitle,
-					// description: values?.description,
-					// status: values?.status,
-					// author_id: authorId,
-					// category_id: values?.category_id,
-					// users: values?.users?.map( ( user ) => user?.user ) || [],
+					title: 'Fee Voucher - user:' + userData?.name + ' - Category:' + categoryTitle + ' - Tutor:' + tutorData?.name,
+					description: 'This Fee Voucher is generated for user:' + userData?.name + ' regarding enrollment into the Category:' + categoryTitle + ' with Tutor:' + tutorData?.name + '.',
+					amount: feeAmount + serviceCharges,
+					due_date: moment().add(30, 'days').format('YYYY-MM-DD'),
+					status: 'unpaid',
+					payment_proof_image_url: '',
+					verification_status: 'pending',
+					category_id: categoryId,
+					tutor_id: tutorData?.id,
+					fee_package_id: rowId,
+					user_id: userData?.id,
+					author_id: userData?.id,
 				};
 
 				console.log('request_data');
 				console.log(request_data);
 
-				// return await request('/api/fee-vouchers/' + rowId, {
+				return await request('/api/fee-vouchers', {
 
-				// 	method: 'DELETE',
+					method: 'POST',
+            		data: request_data,
 
-				// } ).then( ( response ) => {
+				} ).then( ( response ) => {
 
-				// 	if ( response.status === true ) {
-				// 		onFinish( {
-				// 			status: true,
-				// 			text_message: 'Fee Voucher generated successfully',
-				// 		} );
-				// 	} else {
-				// 		onFinish( {
-				// 			status: false,
-				// 			text_message:
-				// 				'Failed to generate Fee Voucher: Invalid response',
-				// 		} );
-				// 	}
-				// } );
+					if ( response.status === true ) {
+						onFinish( {
+							status: true,
+							text_message: 'Fee Voucher generated successfully',
+						} );
+					} else {
+						onFinish( {
+							status: false,
+							text_message:
+								'Failed to generate Fee Voucher: Invalid response',
+						} );
+					}
+				} );
 			} }
 			okText="Yes"
 			cancelText="No"

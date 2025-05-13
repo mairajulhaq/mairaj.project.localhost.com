@@ -3,7 +3,7 @@ import { ProCard, ProForm, ProFormText, ModalForm, ProFormTextArea, ProTable } f
 import { Row, Col, Image, Button } from 'antd';
 import { request } from '@umijs/max';
 import moment from 'moment';
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import GenerateFeeVoucher from './generate-fee-voucher';
 
 const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime, categoryId, userData } ) => {
@@ -159,6 +159,9 @@ const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime,
                         } }
                         userData={ userData }
                         categoryId={ categoryId }
+                        tutorData={ viewModelData }
+                        feeAmount={record?.fee_amount}
+                        serviceCharges={record?.service_charges_amount}
                     />
                 </>
             ],
@@ -478,7 +481,11 @@ const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime,
         
                                 }).then(async (api_response) => {
         
-                                    return { data: api_response.data.data, total: api_response.data.total, current_page: api_response.data.current_page};
+                                    return { 
+                                        data: api_response.data.data,
+                                        total: api_response.data.total,
+                                        current_page: api_response.data.current_page
+                                    };
         
                                 }).catch(function (error) {
                                     console.log(error);
@@ -486,7 +493,6 @@ const ViewTutorHiring = ( { visible, onVisiblityChange, viewModelData, waitTime,
 
                             }
                         }
-                        // dataSource={viewModelData?.experiences?.length ? viewModelData.experiences : []}
                         columns={feePackagesColumns}
                     />
                 </ProCard>

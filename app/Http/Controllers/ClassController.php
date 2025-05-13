@@ -36,6 +36,8 @@ class ClassController extends Controller
             $search   = ( isset($request['search']) && ! empty(isset($request['search'])) ) ? $request['search'] : '';
             $author_id   = ( isset($request['author_id']) && ! empty(isset($request['author_id'])) ) ? $request['author_id'] : '';
             $category_id   = ( isset($request['category_id']) && ! empty(isset($request['category_id'])) ) ? $request['category_id'] : '';
+            $tutor_id   = ( isset($request['tutor_id']) && ! empty(isset($request['tutor_id'])) ) ? $request['tutor_id'] : '';
+            $user_id   = ( isset($request['user_id']) && ! empty(isset($request['user_id'])) ) ? $request['user_id'] : '';
 
             $query = ClassModel::orderBy($orderBy, $order)
                 ->with('category', 'quizzes', 'author');
@@ -198,6 +200,15 @@ class ClassController extends Controller
             return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         
+    }
+
+    public function get_user_enrolled_classes_ids( $user_id ){
+        /**
+         * get user verified fee vouchers
+         * fetch each voucher tutor-id and category-id 
+         * fetch classes-ids by tutor-id and category-id
+         * return classes ids 
+         */
     }
 
 }

@@ -91,19 +91,19 @@ class FeeVoucherController extends Controller
 
             $request_data = $request->validate(
                 [
-                    'title'     => 'required|string|max:50',
+                    'title'     => 'required|string|max:100',
                     'description'     => 'nullable|max:5000',
                     'amount'       => 'required|numeric',
                     'due_date' => 'required|date_format:Y-m-d',
                     'status'     => 'required|string|max:10',
-                    'payment_proof_image_url'     => 'required|string',
-                    'author_id'     => 'required|numeric',
+                    // 'payment_proof_image_url'     => 'required|string',
+                    'fee_package_id'     => 'required|numeric',
                     'user_id'     => 'required|numeric',
-                    'class_id'     => 'required|numeric',
+                    'author_id'     => 'required|numeric',
                 ],
                 [
                     'title.required'     => 'Please provide title',
-                    'title.max'          => 'Please make sure title length is upto 50 characters',
+                    'title.max'          => 'Please make sure title length is upto 100 characters',
                     'description.max' => 'Please provide description maximum of 5000 characters',
                     'amount.required'     => 'Please provide amount id',
                     'amount.numeric'          => 'Please make sure amount is numeric value',
@@ -111,13 +111,13 @@ class FeeVoucherController extends Controller
                     'due_date.date_format' => 'Please make sure your due-date is formatted as Y-m-d',
                     'status.required'     => 'Please provide status',
                     'status.max'          => 'Please make sure status length is upto 10 characters',
-                    'payment_proof_image_url.required'         => 'Please provide the payment proof image url',
-                    'author_id.required'     => 'Please provide author id',
-                    'author_id.numeric'          => 'Please make sure author_id is numeric value',
+                    // 'payment_proof_image_url.required'         => 'Please provide the payment proof image url',
+                    'fee_package_id.required'     => 'Please provide fee package id',
+                    'fee_package_id.numeric'          => 'Please make sure fee package id is numeric value',
                     'user_id.required'     => 'Please provide user id',
                     'user_id.numeric'          => 'Please make sure user id is numeric value',
-                    'class_id.required'     => 'Please provide class id',
-                    'class_id.numeric'          => 'Please make sure class id is numeric value',
+                    'author_id.required'     => 'Please provide author id',
+                    'author_id.numeric'          => 'Please make sure author_id is numeric value',
                 ]
             ); 
 
@@ -159,33 +159,33 @@ class FeeVoucherController extends Controller
 
             $request_data = $request->validate(
                 [
-                    'title'     => 'required|string|max:50',
-                    'description'     => 'nullable|max:5000',
-                    'amount'       => 'required|numeric',
-                    'due_date' => 'required|date_format:Y-m-d',
-                    'status'     => 'required|string|max:10',
-                    'payment_proof_image_url'     => 'required|string',
-                    'author_id'     => 'required|numeric',
-                    'user_id'     => 'required|numeric',
-                    'class_id'     => 'required|numeric',
+                    // 'title'     => 'required|string|max:100',
+                    // 'description'     => 'nullable|max:5000',
+                    // 'amount'       => 'required|numeric',
+                    // 'due_date' => 'required|date_format:Y-m-d',
+                    // 'status'     => 'required|string|max:10',
+                    // 'payment_proof_image_url'     => 'required|string',
+                    'verification_status' => 'required|string|max:10',
+                    // 'author_id'     => 'required|numeric',
+                    // 'user_id'     => 'required|numeric',
                 ],
                 [
-                    'title.required'     => 'Please provide title',
-                    'title.max'          => 'Please make sure title length is upto 50 characters',
-                    'description.max' => 'Please provide description maximum of 5000 characters',
-                    'amount.required'     => 'Please provide amount id',
-                    'amount.numeric'          => 'Please make sure amount is numeric value',
-                    'due_date.required'    => 'Please the due date',
-                    'due_date.date_format' => 'Please make sure your due-date is formatted as Y-m-d',
-                    'status.required'     => 'Please provide status',
-                    'status.max'          => 'Please make sure status length is upto 10 characters',
-                    'payment_proof_image_url.required'         => 'Please provide the payment proof image url',
-                    'author_id.required'     => 'Please provide author_id id',
-                    'author_id.numeric'          => 'Please make sure author_id is numeric value',
-                    'user_id.required'     => 'Please provide user id',
-                    'user_id.numeric'          => 'Please make sure user id is numeric value',
-                    'class_id.required'     => 'Please provide class id',
-                    'class_id.numeric'          => 'Please make sure class id is numeric value',
+                    // 'title.required'     => 'Please provide title',
+                    // 'title.max'          => 'Please make sure title length is upto 100 characters',
+                    // 'description.max' => 'Please provide description maximum of 5000 characters',
+                    // 'amount.required'     => 'Please provide amount id',
+                    // 'amount.numeric'          => 'Please make sure amount is numeric value',
+                    // 'due_date.required'    => 'Please the due date',
+                    // 'due_date.date_format' => 'Please make sure your due-date is formatted as Y-m-d',
+                    // 'status.required'     => 'Please provide status',
+                    // 'status.max'          => 'Please make sure status length is upto 10 characters',
+                    // 'payment_proof_image_url.required'         => 'Please provide the payment proof image url',
+                    'verification_status.required'     => 'Please provide verification status',
+                    'verification_status.max'          => 'Please make sure verification status length is upto 10 characters',
+                    // 'author_id.required'     => 'Please provide author_id id',
+                    // 'author_id.numeric'          => 'Please make sure author_id is numeric value',
+                    // 'user_id.required'     => 'Please provide user id',
+                    // 'user_id.numeric'          => 'Please make sure user id is numeric value',
                 ]
             );
 
@@ -197,6 +197,15 @@ class FeeVoucherController extends Controller
 
             // If everything is OK, then update.
             $fee_voucher->update($request_data);
+
+            /**
+             * if Fee Voucher verification status is verified
+             * than attach user into the category.
+             */
+            if( $fee_voucher->verification_status == 'verified' ){
+                $category = Category::find($fee_voucher->category_id);
+                $category->users()->syncWithoutDetaching([$fee_voucher->user_id], ['created_at' => date('Y-m-d H:i:s')]);
+            }
 
             $response_data = FeeVoucher::with('category', 'tutor', 'fee_package', 'user', 'author')->find($fee_voucher->id);
 

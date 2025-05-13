@@ -53,8 +53,16 @@ class UserController extends Controller
              * Get Specific Category Tutors
              */
             if( $role == 'tutor' && ! empty($category_id) ){
-                $tutor_ids = Category::find($category_id)->tutors()->pluck('users.id')->toArray();
-                $query->whereIn('id', $tutor_ids);
+                $tutors_ids = Category::find($category_id)->tutors()->pluck('users.id')->toArray();
+                $query->whereIn('id', $tutors_ids);
+            }
+
+            /**
+             * Get Specific Category Users
+             */
+            if( $role == 'user' && ! empty($category_id) ){
+                $users_ids = Category::find($category_id)->users()->pluck('users.id')->toArray();
+                $query->whereIn('id', $users_ids);
             }
 
             // search by name and email if search text is provided

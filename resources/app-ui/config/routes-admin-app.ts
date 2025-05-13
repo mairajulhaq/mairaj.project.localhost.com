@@ -100,12 +100,12 @@ const RoutesAdminiApp = [
     component: './admin-app/fee-vouchers-management/list-fee-vouchers',
   },
   {
-    path: '/admin-app/fee-vouchers/new',
+    path: '/admin-app/fee-vouchers/edit/:id',
     hideInMenu: true,
-    name: 'Create Fee Voucher',
+    name: 'Edit Fee Voucher',
     access: 'isAdministrator',
     layout: 'mix',
-    component: './admin-app/fee-vouchers-management/create-fee-voucher',
+    component: './admin-app/fee-vouchers-management/update-fee-voucher',
   },
   /**** Start - Admin App ****/
 ];
