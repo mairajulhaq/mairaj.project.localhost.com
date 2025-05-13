@@ -101,7 +101,7 @@ const ListStudents = () => {
             render: (text, record, _, action) => [
 
                 <Button
-                    key="view"
+                    key="viewable"
                     onClick={() => {
                         setViewModelData(record);
                         setViewModelVisiblity(true);

@@ -75,6 +75,30 @@ const RoutesTutorApp = [
     layout: 'mix',
     component: './tutor-app/quizzes/update-quiz',
   },
+  {
+    path: '/tutor-app/fee-packages',
+    name: 'Fee Packages',
+    icon: 'ShoppingOutlined',
+    access: 'isTutor',
+    layout: 'mix',
+    component: './tutor-app/fee-packages/list-fee-packages',
+  },
+  {
+    path: '/tutor-app/fee-packages/new',
+    hideInMenu: true,
+    name: 'Create Fee Package',
+    access: 'isTutor',
+    layout: 'mix',
+    component: './tutor-app/fee-packages/create-fee-package',
+  },
+  {
+    path: '/tutor-app/fee-packages/edit/:id',
+    hideInMenu: true,
+    name: 'Edit Fee Package',
+    access: 'isTutor',
+    layout: 'mix',
+    component: './tutor-app/fee-packages/update-fee-package',
+  },
 /**** End - Tutor App ****/
 ];
 export default RoutesTutorApp;

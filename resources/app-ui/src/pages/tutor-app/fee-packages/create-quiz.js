@@ -9,12 +9,11 @@ import {
     ProFormSelect,
     ProFormSegmented
 } from '@ant-design/pro-components';
-import { message, Form, Row, Col, Button } from 'antd';
-import { PlusOutlined, PercentageOutlined } from '@ant-design/icons';
-import React, { useEffect, useRef, useState } from "react";
+import { message, Form } from 'antd';
+import { PercentageOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from "react";
 import { request, history } from '@umijs/max';
-import { useParams, useModel } from "@@/exports";
-import ListQuestions from './questions/list-questions';
+import { useModel } from "@@/exports";
 
 const waitTime = (time = 100) => {
     return new Promise((resolve) => {
@@ -25,13 +24,11 @@ const waitTime = (time = 100) => {
 };
 
 const initialValues = {
-    title: '',
-    description: '',
-    status: '',
-    passing_percentage: '',
-    attempts_limit: '',
-    class_id: '',
-    users: '',
+    users: [
+        {
+            user: undefined, // Shows 1 empty dropdown
+        },
+    ]
 };
 
 
@@ -58,14 +55,14 @@ const onFinishHandlerForm = async (values, authorId) => {
             users: values?.users?.map( ( user ) => user?.user ) || [],
         };
 
-        return await request('/api/quizzes/' + values?.quiz_id, {
-            method: 'PUT',
+        return await request('/api/quizzes', {
+            method: 'POST',
             data: request_data,
 
         }).then(async (api_response) => {
 
             /**
-             * Quiz Updated then show message and redirect to listing screen
+             * Quiz Created then show message and redirect to listing screen
              */
             if (api_response?.data?.id > 0) {
                 message.success('Submitted successfully');
@@ -86,9 +83,7 @@ const onFinishHandlerForm = async (values, authorId) => {
 };
 
 
-const UpdateFeeVoucher = () => {
-
-    const params = useParams();
+const CreateQuiz = () => {
 
     /**
      * States of Component
@@ -97,10 +92,8 @@ const UpdateFeeVoucher = () => {
     const {initialState, loading, refresh, setInitialState} = useModel('@@initialState');
     const [authorId, setAuthorId] = useState(0);
     const [form] = Form.useForm();
-    const questionsTableRef = useRef();
     const [ allClasses, setAllClasses ] = useState( [] );
     const [ allUsers, setAllUsers ] = useState( [] );
-    const [ quizId, setQuizId ] = useState(0);
 
     /**
      * Set Quiz AuthorId who's created the quiz
@@ -108,10 +101,6 @@ const UpdateFeeVoucher = () => {
     useEffect(() => {
         setAuthorId(initialState?.currentUser?.id);
     }, []); //empty dependency array so it only runs once at render
-
-    useEffect(() => {
-        setQuizId(params.id);
-    }, []); // empty dependency array so it only runs once at render
 
     /**
      * Start - Classes Data
@@ -162,69 +151,15 @@ const UpdateFeeVoucher = () => {
     return (
         <PageContainer>
             
-                <Row gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
-                    <Col flex="auto">
-                
-                    </Col>
-                
-                    <Col flex="100px">
-                        <Button
-                            type="primary"
-                            key="new"
-                            onClick={() => {
-                                history.push('/tutor-app/quizzes/new');
-                            }}
-                            style={{marginBlockEnd: 15}}
-                        >
-                            <PlusOutlined/> New
-                        </Button>
-                    </Col>
-                </Row>
                 <ProForm
+                    onFinish={async (values) => {
+                        await waitTime(2000);
+                        await onFinishHandlerForm(values, authorId);
+                    }}
                     layout='vertical'
                     grid={true}
                     initialValues={initialValues}
                     form={form}
-                    params={ { 'quiz_id': quizId } }
-                    request={
-                                        
-                        async (params= {} ) => {
-                    
-                            if( params?.quiz_id == 0 ) {
-                                return;
-                            }
-                    
-                            await waitTime(2000);
-                    
-                            return await request('/api/quizzes/' + params?.quiz_id, {
-                                method: 'GET',
-                            }).then(async (api_response) => {
-                    
-                                return {
-                                    ...initialValues,
-                                        title: api_response?.data?.title,
-                                        description: api_response?.data?.description,
-                                        status: api_response?.data?.status,
-                                        passing_percentage: api_response?.data?.passing_percentage,
-                                        attempts_limit: api_response?.data?.attempts_limit,
-                                        class_id: api_response?.data?.class_id,
-                                        users: api_response?.data?.users?.map( ( user ) => ( {
-                                            user: user?.id
-                                        } ) ) || []
-                                };
-                    
-                            }).catch(function (error) {
-                                console.log(error);
-                            });
-                    
-                        }
-                    }
-                    onFinish={async (values) => {
-                        await waitTime(2000);
-                        values.quiz_id = quizId;
-                        values.author_id = authorId;
-                        await onFinishHandlerForm(values, authorId);
-                    }}
                     submitter={{
                         render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
                     }}
@@ -347,12 +282,6 @@ const UpdateFeeVoucher = () => {
                             </ProFormList>
                         </ProForm.Group>
                     </ProCard>
-
-                    <ListQuestions
-                        questionsTableRef={ questionsTableRef }
-                        quizID={ quizId }
-                        authorID={ authorId }
-                    />,
                     
                 </ProForm>
                 
@@ -361,4 +290,4 @@ const UpdateFeeVoucher = () => {
 
 };
 
-export default UpdateFeeVoucher;
+export default CreateQuiz;

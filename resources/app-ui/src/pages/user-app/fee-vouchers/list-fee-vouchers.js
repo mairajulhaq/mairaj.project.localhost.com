@@ -5,7 +5,6 @@ import { request, history } from '@umijs/max';
 import moment from 'moment';
 import { useModel } from 'umi';
 import { useEffect, useRef, useState } from "react";
-import DeleteFeeVoucher from './delete-fee-voucher';
 
 export const waitTimePromise = async (time = 100) => {
     return new Promise((resolve) => {
@@ -71,16 +70,16 @@ const ListFeeVouchers = () => {
 			),
 		},
         {
-            title: 'Verification Status',
-            dataIndex: 'verification_status',
-            key: 'table-column-verification-status',
-            hideInSearch: true,
-            render: ( text ) => (
-                <Tag color={ text === 'verified' ? 'green' : 'red' }>
-                    { text === 'verified' ? 'Verified' : 'Pending' }
-                </Tag>
-            ),
-        },
+			title: 'Verification Status',
+			dataIndex: 'verification_status',
+			key: 'table-column-verification-status',
+			hideInSearch: true,
+			render: ( text ) => (
+				<Tag color={ text === 'verified' ? 'green' : 'red' }>
+					{ text === 'verified' ? 'Verified' : 'Pending' }
+				</Tag>
+			),
+		},
         {
             title: "Created Date",
             dataIndex: 'created_at',
@@ -111,24 +110,12 @@ const ListFeeVouchers = () => {
                 <>
                     <Button
                         key="editable"
-                        onClick={() => {
-                            history.push('/admin-app/fee-vouchers/edit/' + record.id);
-                        }}
+                        // onClick={() => {
+                        //     history.push('/admin-app/fee-vouchers/edit/' + record.id);
+                        // }}
                     >
-                        <EditOutlined />
-                    </Button>,
-
-                    <DeleteFeeVoucher
-                        rowId={ record?.id }
-                        onFinish={ ( { status, text_message } ) => {
-                            if ( status ) {
-                                message.success( text_message );
-                                feevouchersTableRef.current?.reload();
-                            } else {
-                                message.error( text_message );
-                            }
-                        } }
-                    />
+                        <EditOutlined /> Submit Payment Proof
+                    </Button>
                 </>
             ],
         },

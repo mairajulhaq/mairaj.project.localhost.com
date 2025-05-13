@@ -5,7 +5,7 @@ import { request, history } from '@umijs/max';
 import moment from 'moment';
 import { useModel } from 'umi';
 import { useEffect, useRef, useState } from "react";
-import DeleteFeeVoucher from './delete-fee-voucher';
+import DeleteFeePackage from './delete-fee-package';
 
 export const waitTimePromise = async (time = 100) => {
     return new Promise((resolve) => {
@@ -19,7 +19,7 @@ export const waitTime = async (time = 100) => {
     await waitTimePromise(time);
 };
 
-const ListFeeVouchers = () => {
+const ListFeePackages = () => {
 
     const {initialState, loading, refresh, setInitialState} = useModel('@@initialState');
 
@@ -29,7 +29,7 @@ const ListFeeVouchers = () => {
     console.log('loading');
     console.log(loading);
 
-    const feevouchersTableRef = useRef();
+    const feepackagesTableRef = useRef();
 
     const [authorId, setAuthorId] = useState(0);
 
@@ -60,26 +60,16 @@ const ListFeeVouchers = () => {
 			hideInSearch: true,
 		},
 		{
-			title: 'Status',
-			dataIndex: 'status',
-			key: 'table-column-status',
-			hideInSearch: true,
-			render: ( text ) => (
-				<Tag color={ text === 'paid' ? 'green' : 'red' }>
-					{ text === 'paid' ? 'Paid' : 'Unpaid' }
-				</Tag>
-			),
-		},
-        {
-            title: 'Verification Status',
-            dataIndex: 'verification_status',
-            key: 'table-column-verification-status',
+            title: "Fee Amount",
+            dataIndex: 'fee_amount',
+            key: 'table-column-fee-amount',
             hideInSearch: true,
-            render: ( text ) => (
-                <Tag color={ text === 'verified' ? 'green' : 'red' }>
-                    { text === 'verified' ? 'Verified' : 'Pending' }
-                </Tag>
-            ),
+        },
+        {
+            title: "Service Charges",
+            dataIndex: 'service_charges_amount',
+            key: 'table-column-service-charges-amount',
+            hideInSearch: true,
         },
         {
             title: "Created Date",
@@ -112,18 +102,18 @@ const ListFeeVouchers = () => {
                     <Button
                         key="editable"
                         onClick={() => {
-                            history.push('/admin-app/fee-vouchers/edit/' + record.id);
+                            history.push('/tutor-app/fee-packages/edit/' + record.id);
                         }}
                     >
                         <EditOutlined />
                     </Button>,
 
-                    <DeleteFeeVoucher
+                    <DeleteFeePackage
                         rowId={ record?.id }
                         onFinish={ ( { status, text_message } ) => {
                             if ( status ) {
                                 message.success( text_message );
-                                feevouchersTableRef.current?.reload();
+                                feepackagesTableRef.current?.reload();
                             } else {
                                 message.error( text_message );
                             }
@@ -137,7 +127,7 @@ const ListFeeVouchers = () => {
     return (
         <PageContainer>
             <ProTable
-                actionRef={feevouchersTableRef}
+                actionRef={feepackagesTableRef}
                 rowKey="id"
                 search={false}
                 options={false}
@@ -146,6 +136,17 @@ const ListFeeVouchers = () => {
                     showSizeChanger: true,
                     pageSizeOptions: [10, 20, 50, 100],
                 }}
+                toolBarRender={() => [
+                    <Button
+                        type="primary"
+                        key="new"
+                        onClick={() => {
+                            history.push('/tutor-app/fee-packages/new');
+                        }}
+                    >
+                        <PlusOutlined/> New
+                    </Button>,
+                ]}
                 request={
 
                         async (params, sort, filter) => {
@@ -155,7 +156,7 @@ const ListFeeVouchers = () => {
                          */
                         await waitTime(2000);
 
-                        return await request('/api/fee-vouchers', {
+                        return await request('/api/fee-packages', {
 
                             params: {
                                 // author_id: authorId,
@@ -179,4 +180,4 @@ const ListFeeVouchers = () => {
     );
 };
 
-export default ListFeeVouchers;
+export default ListFeePackages;
